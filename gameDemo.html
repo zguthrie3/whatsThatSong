@@ -1,8 +1,7 @@
 <html>
 <head>
-    <meta charset="utf-8">
     <link href='https://fonts.googleapis.com/css?family=Tangerine:700' rel='stylesheet' type='text/css'>
-    <title>Game Demo to see if this shit works</title>
+    <title>What's That Song? An interactive guessing game made for Professor Loukissas's LMC 2700 Class</title>
     <style>
         * { 
             padding: 0;
@@ -21,7 +20,7 @@
     <script>
         var canvas;
         var surface
-        var currentScreen;
+        var startScreen;
         var mainGameScreen;
         var simpleClickSwitch;
 
@@ -36,8 +35,8 @@
 
                 frameId = window.requestAnimationFrame(loop);
 
-                currentScreen.update(elapsed);
-                currentScreen.draw(surface);
+                startScreen.update(elapsed);
+                startScreen.draw(surface);
 
                 lastFrame = thisFrame;
             }
@@ -99,9 +98,9 @@
         }());
 
         // define the start screen
-        currentScreen = (function (input) {
+        startScreen = (function (input) {
 
-            var hue = 0;
+            var greenVal = 0;
             var direction = 1;
             var transitioning = false;
             var wasButtonDown = false;
@@ -117,7 +116,7 @@
             function draw(ctx) {
 
                 var y = ctx.canvas.height / 2;
-                var color = 'rgb(0,' + hue + ',0)';
+                var color = 'rgb(0,' + greenVal + ',0)';
 
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#78ff87';
@@ -136,17 +135,16 @@
 
             function update() {
 
-                hue += 1 * direction;
-                if (hue > 225) direction = -1;
-                if (hue < 20) direction = 1;
+                greenVal += 1 * direction;
+                if (greenVal > 225) direction = -1;
+                if (greenVal < 20) direction = 1;
 
                 var isButtonDown = input.isButtonDown();
                 var mouseJustClicked = !isButtonDown && wasButtonDown;
 
                 if (mouseJustClicked && !transitioning) {
                     transitioning = true;
-                    currentScreen = mainGameScreen;
-                    currentScreen.start();
+                    startScreen = mainGameScreen;
                 }
 
                 wasButtonDown = isButtonDown;
