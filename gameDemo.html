@@ -1,0 +1,165 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Tangerine:700' rel='stylesheet' type='text/css'>
+    <title>Game Demo to see if this shit works</title>
+    <style>
+        * { 
+            padding: 0;
+            margin: 0;
+        }
+        canvas {
+            background-image: url('https://hdwallpapers.cat/wallpaper_1600x900/vintage_music_paper_firefox_persona_score_1600x900_hd-wallpaper-630445.jpg');
+            display: block;
+            margin: 0;
+            auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="board"></canvas>
+    <script>
+        var canvas;
+        var surface
+        var currentScreen;
+        var mainGameScreen;
+        var simpleClickSwitch;
+
+        function beginLoop() {
+            var frameId = 0;
+            var lastFrame = Date.now();
+
+            function loop() {
+                var thisFrame = Date.now();
+
+                var elapsed = thisFrame - lastFrame;
+
+                frameId = window.requestAnimationFrame(loop);
+
+                currentScreen.update(elapsed);
+                currentScreen.draw(surface);
+
+                lastFrame = thisFrame;
+            }
+
+            loop();
+        }
+
+        canvas = document.querySelector('canvas#board');
+        canvas.setAttribute('width', 1600);
+        canvas.setAttribute('height', 900);
+
+        surface = canvas.getContext('2d');
+
+        simpleClickSwitch = (function (target) {
+            var isButtonDown = false;
+
+            target.addEventListener('mousedown', function () {
+                isButtonDown = true;
+            });
+            target.addEventListener('mouseup', function () {
+                isButtonDown = false;
+            });
+
+            return {
+                isButtonDown: function () {
+                    return isButtonDown;
+                }
+            };
+        }(document));
+
+        // define the main screen for the game
+        mainGameScreen = (function (input) {
+
+            function draw(ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '172px Tangerine';
+                centerText(ctx, 'Settings', 200);
+
+                ctx.font = '108px Tangerine';
+                centerText(ctx, 'Please choose the number of players in this game below', 350);
+            }
+
+            function centerText(ctx, text, y) {
+                var measurement = ctx.measureText(text);
+                var x = (ctx.canvas.width - measurement.width) / 2;
+                ctx.fillText(text, x, y);
+                ctx.strokeText(text, x, y);
+            }
+
+            function update(elapsed) {
+            }
+
+            return {
+                draw: draw,
+                update: update
+            };
+        }());
+
+        // define the start screen
+        currentScreen = (function (input) {
+
+            var hue = 0;
+            var direction = 1;
+            var transitioning = false;
+            var wasButtonDown = false;
+            var title = 'What\'s that song?';
+
+            function centerText(ctx, text, y) {
+                var measurement = ctx.measureText(text);
+                var x = (ctx.canvas.width - measurement.width) / 2;
+                ctx.fillText(text, x, y);
+                ctx.strokeText(text, x, y);
+            }
+
+            function draw(ctx) {
+
+                var y = ctx.canvas.height / 2;
+                var color = 'rgb(0,' + hue + ',0)';
+
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '224px Tangerine';
+                centerText(ctx, title, y);
+
+                ctx.strokeStyke = 'white';
+                ctx.font = '72px Tangerine';
+                centerText(ctx, 'A project made by Christine St. Jean, Corey Salmon, and Zach Guthrie', y + 170);
+
+                ctx.fillStyle = color;
+                ctx.font = '72px Tangerine';
+                centerText(ctx, 'click to begin', y + 300);
+            }
+
+            function update() {
+
+                hue += 1 * direction;
+                if (hue > 225) direction = -1;
+                if (hue < 20) direction = 1;
+
+                var isButtonDown = input.isButtonDown();
+                var mouseJustClicked = !isButtonDown && wasButtonDown;
+
+                if (mouseJustClicked && !transitioning) {
+                    transitioning = true;
+                    currentScreen = mainGameScreen;
+                    currentScreen.start();
+                }
+
+                wasButtonDown = isButtonDown;
+            }
+
+            return {
+                draw: draw,
+                update: update
+            };
+        }(simpleClickSwitch));
+
+
+        beginLoop();
+    </script>
+</body>
+</html>
