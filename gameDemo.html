@@ -28,6 +28,7 @@
         var numPlayers;
         var currentPlayer = 1;
         var players = [{score: 0}];
+        var title = 'What\'s that song?';
 
         function beginLoop() {
             var frameId = 0;
@@ -141,6 +142,7 @@
                         startScreen = gameScreen;
                     } else if (button == buttons[2]) {
                         transitioning = true;
+                        players[1] = {score: 0};
                         players[2] = {score: 0};
                         numPlayers = 3;
                         startScreen = gameScreen;
@@ -161,7 +163,7 @@
             var direction = 1;
             var transitioning = false;
             var wasButtonDown = false;
-            var title = 'What\'s that song?';
+
 
             function draw(canvas, ctx) {
 
@@ -208,12 +210,98 @@
 
         gameScreen = (function (input) {
             function draw(canvas, ctx) {
+                var easyMeasure = ctx.measureText('Easy');
+                var medMeasure = ctx.measureText('Medium');
+                var hardMeasure = ctx.measureText('Hard');
+                var x1, x2, x3;
+                var y1, y2, y3;
+                var teamOne, teamTwo, teamThree;
+
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#78ff87';
-                for (var i = 0; i < 3; i++) {
-                    for (var j = 0; j < 7; j++) {
-                        ctx.fillRect(75 + (j * 150), 200 + (i * 150), 150, 150);
+                ctx.strokeStyle = '#000000';
+                for (var i = 0; i < 4; i++) {
+                    for (var j = 0; j < 6; j++) {
+                        ctx.fillRect(150 + (j * 150), 140 + (i * 150), 150, 150);
+                        ctx.strokeRect(150 + (j * 150), 140 + (i * 150), 150, 150);
                     }
+                }
+                
+                ctx.font = '120px Tangerine';
+                centerText(ctx, title, 100);
+
+                ctx.fillStyle = '#ffffff';
+                labelGrid(ctx, 'Easy', 'Medium', 'Hard');
+
+                ctx.font = '96px Tangerine';
+                if (numPlayers == 1) {
+                    ctx.fillStyle = 'red';
+                    centerText(ctx, 'Team 1: ' + players[0].score, 825);
+                } else if (numPlayers == 2) {
+                    teamOne = ctx.measureText('Team 1: ' + players[0].score);
+                    teamTwo = ctx.measureText('Team 2: ' + players[1].score);
+                    x1 = (ctx.canvas.width - teamOne.width) / 4;
+                    x2 = ctx.canvas.width / 2 + 300 - teamTwo.width / 2;
+
+                    if (currentPlayer == 1) {
+                        ctx.fillStyle = 'red';
+                    } else {
+                        ctx.fillStyle = 'white';
+                    }
+                    ctx.fillText('Team 1: ' + players[0].score, x1, 825);
+                    ctx.strokeText('Team 1: ' + players[0].score, x1, 825);
+                    if (currentPlayer == 2) {
+                        ctx.fillStyle = 'red';
+                    } else {
+                        ctx.fillStyle = 'white';
+                    }
+                    ctx.fillText('Team 2: ' + players[1].score, x2, 825);
+                    ctx.strokeText('Team 2: ' + players[1].score, x2, 825);
+                } else {
+                    teamOne = ctx.measureText('Team 1: ' + players[0].score);
+                    teamThree = ctx.measureText('Team 3: ' + players[2].score);
+                    x1 = 225 - (teamOne.width / 2);
+                    if (currentPlayer == 2) {
+                        ctx.fillStyle = 'red';
+                    } else {
+                        ctx.fillStyle = 'white';
+                    }
+                    centerText(ctx, 'Team 2: ' + players[1].score, 825);
+                    x3 = 825;
+
+                    if (currentPlayer == 1) {
+                        ctx.fillStyle = 'red';
+                    } else {
+                        ctx.fillStyle = 'white';
+                    }
+                    ctx.fillText('Team 1: ' + players[0].score, x1, 825);
+                    ctx.strokeText('Team 1: ' + players[0].score, x1, 825);
+
+                    if (currentPlayer == 3) {
+                        ctx.fillStyle = 'red';
+                    } else {
+                        ctx.fillStyle = 'white';
+                    }
+                    ctx.fillText('Team 3: ' + players[2].score, x3, 825);
+                    ctx.strokeText('Team 3: ' + players[2].score, x3, 825);                    
+                }
+            }
+
+            function labelGrid(ctx, topLabel, midLabel, botLabel) {
+                ctx.font = '50px Tangerine';
+                var topMeasure = ctx.measureText(topLabel);
+                var midMeasure = ctx.measureText(midLabel);
+                var botMeasure = ctx.measureText(botLabel);
+
+                for (var i = 0; i < 6; i++) {
+                    ctx.fillText(topLabel, 225 + (i * 150) - (topMeasure.width / 2), 365);
+                    ctx.strokeText(topLabel, 225 + (i * 150) - (topMeasure.width / 2), 365);
+                    
+                    ctx.fillText(midLabel, 225 + (i * 150) - (midMeasure.width / 2), 515);
+                    ctx.strokeText(midLabel, 225 + (i * 150) - (midMeasure.width / 2), 515);
+
+                    ctx.fillText(botLabel, 225 + (i * 150) - (botMeasure.width / 2), 665);
+                    ctx.strokeText(botLabel, 225 + (i * 150) - (botMeasure.width / 2), 665);                
                 }
             }
             function update() {
