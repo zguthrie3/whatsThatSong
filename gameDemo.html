@@ -26,6 +26,8 @@
         var gameScreen;
         var simpleClickSwitch;
         var numPlayers;
+        var currentPlayer = 1;
+        var players = [{score: 0}];
 
         function beginLoop() {
             var frameId = 0;
@@ -134,10 +136,12 @@
                         startScreen = gameScreen;
                     } else if (button == buttons[1]) {
                         transitioning = true;
+                        players[1] = {score: 0};
                         numPlayers = 2;
                         startScreen = gameScreen;
                     } else if (button == buttons[2]) {
                         transitioning = true;
+                        players[2] = {score: 0};
                         numPlayers = 3;
                         startScreen = gameScreen;
                     }
@@ -205,6 +209,12 @@
         gameScreen = (function (input) {
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                for (var i = 0; i < 3; i++) {
+                    for (var j = 0; j < 7; j++) {
+                        ctx.fillRect(75 + (j * 150), 200 + (i * 150), 150, 150);
+                    }
+                }
             }
             function update() {
                 var isButtonDown = input.isButtonDown();
