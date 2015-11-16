@@ -23,7 +23,9 @@
         var surface
         var startScreen;
         var settingScreen;
+        var gameScreen;
         var simpleClickSwitch;
+        var numPlayers;
 
         function beginLoop() {
             var frameId = 0;
@@ -36,7 +38,7 @@
 
                 frameId = window.requestAnimationFrame(loop);
 
-                startScreen.update(elapsed);
+                startScreen.update(canvas, elapsed);
                 startScreen.draw(canvas, surface);
 
                 lastFrame = thisFrame;
@@ -51,7 +53,7 @@
 
         surface = canvas.getContext('2d');
 
-        simpleClickSwitch = (function (target) {
+        mouseClick = (function (target) {
             var isButtonDown = false;
 
             target.addEventListener('mousedown', function () {
@@ -70,11 +72,13 @@
 
         // define the main screen for the game
         settingScreen = (function (input) {
+            var wasButtonDown = false;
+            var transitioning = false;
+            var buttons = [{x: 120, y: 500, w: 240, h: 200},
+                            {x: 480, y: 500, w: 240, h: 200},
+                            {x: 840, y: 500, w: 240, h: 200}];
 
             function draw(canvas, ctx) {
-                var buttons = [{x: 120, y: 500, w: 240, h: 200},
-                                {x: 480, y: 500, w: 240, h: 200},
-                                {x: 840, y: 500, w: 240, h: 200}];
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#78ff87';
                 ctx.strokeStyle = 'black';
@@ -82,7 +86,7 @@
                 centerText(ctx, 'Settings', 200);
 
                 ctx.font = '86px Tangerine';
-                centerText(ctx, 'Please choose the number of players in this game below', 350);
+                centerText(ctx, 'Please choose the number of teams in this game below', 350);
 
                 ctx.fillStyle = '#ffffff';
                 for (var i = 0; i < buttons.length; i++) {
@@ -99,13 +103,13 @@
             }
 
             function numberButton(ctx, text, button) {
-                    ctx.font = '150px monospace';
-                    ctx.strokeStyle = 'black';
-                    ctx.fillStyle = -'#ffffff';
-                    var measurement = ctx.measureText(text);
-                    var x = 80 + button.x;
-                    ctx.fillText(text, x, 650);
-                    ctx.strokeText(text, x, 650); 
+                ctx.font = '150px monospace';
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = -'#ffffff';
+                var measurement = ctx.measureText(text);
+                var x = 80 + button.x;
+                ctx.fillText(text, x, 650);
+                ctx.strokeText(text, x, 650); 
             }
 
             function buttonCollision(buttons, x, y) {
@@ -121,14 +125,30 @@
                 }
                 return isCollision;
             }
-            function update(elapsed) {
+            function update(canvas, elapsed) {
+                canvas.addEventListener('click', function(e) {
+                    var button = buttonCollision(buttons, e.offsetX, e.offsetY);
+                    if (button == buttons[0]) {
+                        transitioning = true;
+                        numPlayers = 1;
+                        startScreen = gameScreen;
+                    } else if (button == buttons[1]) {
+                        transitioning = true;
+                        numPlayers = 2;
+                        startScreen = gameScreen;
+                    } else if (button == buttons[2]) {
+                        transitioning = true;
+                        numPlayers = 3;
+                        startScreen = gameScreen;
+                    }
+                }, false);
             }
 
             return {
                 draw: draw,
                 update: update
             };
-        }());
+        }(mouseClick));
 
         // define the start screen
         startScreen = (function (input) {
@@ -187,9 +207,23 @@
                 draw: draw,
                 update: update
             };
-        }(simpleClickSwitch));
+        }(mouseClick));
 
+        gameScreen = (function (input) {
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            }
+            function update() {
+                var isButtonDown = input.isButtonDown();
+                var mouseJustClicked = !isButtonDown && wasButtonDown;
+                wasButtonDown = isButtonDown;
+            }
 
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
         beginLoop();
     </script>
 </body>
