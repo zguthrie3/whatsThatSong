@@ -1,5 +1,6 @@
 <html>
 <head>
+    <meta charset="utf-8">
     <link href='https://fonts.googleapis.com/css?family=Tangerine:700' rel='stylesheet' type='text/css'>
     <title>What's That Song? An interactive guessing game made for Professor Loukissas's LMC 2700 Class</title>
     <style>
@@ -21,7 +22,7 @@
         var canvas;
         var surface
         var startScreen;
-        var mainGameScreen;
+        var settingScreen;
         var simpleClickSwitch;
 
         function beginLoop() {
@@ -36,7 +37,7 @@
                 frameId = window.requestAnimationFrame(loop);
 
                 startScreen.update(elapsed);
-                startScreen.draw(surface);
+                startScreen.draw(canvas, surface);
 
                 lastFrame = thisFrame;
             }
@@ -45,7 +46,7 @@
         }
 
         canvas = document.querySelector('canvas#board');
-        canvas.setAttribute('width', 1600);
+        canvas.setAttribute('width', 1200);
         canvas.setAttribute('height', 900);
 
         surface = canvas.getContext('2d');
@@ -68,17 +69,26 @@
         }(document));
 
         // define the main screen for the game
-        mainGameScreen = (function (input) {
+        settingScreen = (function (input) {
 
-            function draw(ctx) {
+            function draw(canvas, ctx) {
+                var buttons = [{x: 120, y: 500, w: 240, h: 200},
+                                {x: 480, y: 500, w: 240, h: 200},
+                                {x: 840, y: 500, w: 240, h: 200}];
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#78ff87';
                 ctx.strokeStyle = 'black';
                 ctx.font = '172px Tangerine';
                 centerText(ctx, 'Settings', 200);
 
-                ctx.font = '108px Tangerine';
+                ctx.font = '86px Tangerine';
                 centerText(ctx, 'Please choose the number of players in this game below', 350);
+
+                ctx.fillStyle = '#ffffff';
+                for (var i = 0; i < buttons.length; i++) {
+                    ctx.fillRect(buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h);
+                    numberButton(ctx, i + 1, buttons[i]);                
+                }
             }
 
             function centerText(ctx, text, y) {
@@ -88,6 +98,29 @@
                 ctx.strokeText(text, x, y);
             }
 
+            function numberButton(ctx, text, button) {
+                    ctx.font = '150px monospace';
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = -'#ffffff';
+                    var measurement = ctx.measureText(text);
+                    var x = 80 + button.x;
+                    ctx.fillText(text, x, 650);
+                    ctx.strokeText(text, x, 650); 
+            }
+
+            function buttonCollision(buttons, x, y) {
+                var isCollision = false;
+                for (var i = 0; i < buttons.length; i++) {
+                    var left = buttons[i].x;
+                    var right = buttons[i].x + buttons[i].w;
+                    var top = buttons[i].y
+                    var bottom = buttons[i].y + buttons[i].h;
+                    if (right >= x && left <= x && bottom >= y && top <= y) {
+                        isCollision = buttons[i];
+                    }
+                }
+                return isCollision;
+            }
             function update(elapsed) {
             }
 
@@ -113,7 +146,7 @@
                 ctx.strokeText(text, x, y);
             }
 
-            function draw(ctx) {
+            function draw(canvas, ctx) {
 
                 var y = ctx.canvas.height / 2;
                 var color = 'rgb(0,' + greenVal + ',0)';
@@ -125,12 +158,12 @@
                 centerText(ctx, title, y);
 
                 ctx.strokeStyke = 'white';
-                ctx.font = '72px Tangerine';
-                centerText(ctx, 'A project made by Christine St. Jean, Corey Salmon, and Zach Guthrie', y + 170);
+                ctx.font = '60px Tangerine';
+                centerText(ctx, 'A project made by Christine St. Jean, Corey Salmon, and Zach Guthrie', y + 150);
 
                 ctx.fillStyle = color;
-                ctx.font = '72px Tangerine';
-                centerText(ctx, 'click to begin', y + 300);
+                ctx.font = '60px Tangerine';
+                centerText(ctx, 'click to begin', y + 250);
             }
 
             function update() {
@@ -144,7 +177,7 @@
 
                 if (mouseJustClicked && !transitioning) {
                     transitioning = true;
-                    startScreen = mainGameScreen;
+                    startScreen = settingScreen;
                 }
 
                 wasButtonDown = isButtonDown;
