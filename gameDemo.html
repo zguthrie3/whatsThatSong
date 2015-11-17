@@ -93,7 +93,15 @@
             }
             return isCollision;
         }
-        // define the main screen for the game
+
+        function setNextPlayer() {
+            currentPlayer++;
+            if (currentPlayer == 4) {
+                currentPlayer = 1;
+            }
+        }
+
+        // define the setting screen for the game
         settingScreen = (function (input) {
             var wasButtonDown = false;
             var transitioning = false;
@@ -209,6 +217,8 @@
         }(mouseClick));
 
         gameScreen = (function (input) {
+            var buttons = [];
+
             function draw(canvas, ctx) {
                 var easyMeasure = ctx.measureText('Easy');
                 var medMeasure = ctx.measureText('Medium');
@@ -222,8 +232,10 @@
                 ctx.strokeStyle = '#000000';
                 for (var i = 0; i < 4; i++) {
                     for (var j = 0; j < 6; j++) {
-                        ctx.fillRect(150 + (j * 150), 140 + (i * 150), 150, 150);
-                        ctx.strokeRect(150 + (j * 150), 140 + (i * 150), 150, 150);
+                        var num = (i * 6) + j
+                        buttons[num] = {x: 150 + (j * 150), y: 140 + (i * 150), w: 150, h: 150};
+                        ctx.fillRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
+                        ctx.strokeRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
                     }
                 }
                 
@@ -349,11 +361,31 @@
                 ctx.strokeText('Music', 975 - (measure.width / 2), 255);
             }
             function update() {
-                var isButtonDown = input.isButtonDown();
-                var mouseJustClicked = !isButtonDown && wasButtonDown;
-                wasButtonDown = isButtonDown;
+                canvas.addEventListener('click', function(e) {
+                    var button = buttonCollision(buttons, e.offsetX, e.offsetY);
+                    if (button !== null && button.y > 150) {
+                        transitioning = true;
+                        currentTile = button;
+                        startScreen = pianoScreen;
+                    }
+                }, false);
             }
 
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
+
+        pianoScreen = (function (input) {
+
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            }
+
+            function update() {
+
+            }
             return {
                 draw: draw,
                 update: update
