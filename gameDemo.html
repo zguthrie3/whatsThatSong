@@ -406,6 +406,7 @@
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.strokeStyle = 'black';
                 drawKeys(ctx);
+                labelKeys(ctx);
             }
 
             function update(ctx) {
@@ -416,6 +417,7 @@
                         sound.play();
                         currentNote = sounds[e.keyCode];
                         drawKeys(ctx);
+                        
                     }
                 }
                 document.onkeyup = function (e) {
@@ -423,6 +425,85 @@
                 }
             }
 
+            function labelKeys(ctx) {
+                ctx.font = '66px Tangerine';
+                ctx.fillStyle = 'black';
+
+                var measure = ctx.measureText('A');
+                ctx.fillText('A', 150 - (measure.width / 2), 650);
+                ctx.strokeText('A', 150 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('S');
+                ctx.fillText('S', 240 - (measure.width / 2), 650);
+                ctx.strokeText('S', 240 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('D');
+                ctx.fillText('D', 330 - (measure.width / 2), 650);
+                ctx.strokeText('D', 330 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('F');
+                ctx.fillText('F', 420 - (measure.width / 2), 650);
+                ctx.strokeText('F', 420 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('G');
+                ctx.fillText('G', 510 - (measure.width / 2), 650);
+                ctx.strokeText('G', 510 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('H');
+                ctx.fillText('H', 600 - (measure.width / 2), 650);
+                ctx.strokeText('H', 600 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('J');
+                ctx.fillText('J', 690 - (measure.width / 2), 650);
+                ctx.strokeText('J', 690 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('K');
+                ctx.fillText('K', 780 - (measure.width / 2), 650);
+                ctx.strokeText('K', 780 - (measure.width / 2), 650);
+
+                measure = ctx.measureText('L');
+                ctx.fillText('L', 870 - (measure.width / 2), 650);
+                ctx.strokeText('L', 870 - (measure.width / 2), 650);
+
+                measure = ctx.measureText(';');
+                ctx.fillText(';', 960 - (measure.width / 2), 650);
+                ctx.strokeText(';', 960 - (measure.width / 2), 650);
+                
+                measure = ctx.measureText(',');
+                ctx.fillText(',', 1050 - (measure.width / 2), 650);
+                ctx.strokeText(',', 1050 - (measure.width / 2), 650);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = '54px Tangerine';
+                measure = ctx.measureText('Y');
+                ctx.fillText('Y', 552 - (measure.width / 2), 250);
+                ctx.strokeText('Y', 552 - (measure.width / 2), 250);
+
+                ctx.font = '60px Tangerine';
+                measure = ctx.measureText('W');
+                ctx.fillText('W', 187 - (measure.width / 2), 250);
+                ctx.strokeText('W', 187 - (measure.width / 2), 250);
+                
+                measure = ctx.measureText('E');
+                ctx.fillText('E', 292 - (measure.width / 2), 250);
+                ctx.strokeText('E', 292 - (measure.width / 2), 250);
+                
+                measure = ctx.measureText('T');
+                ctx.fillText('T', 452 - (measure.width / 2), 250);
+                ctx.strokeText('T', 452 - (measure.width / 2), 250);
+
+                measure = ctx.measureText('U');
+                ctx.fillText('U', 652 - (measure.width / 2), 250);
+                ctx.strokeText('U', 652 - (measure.width / 2), 250);
+
+                measure = ctx.measureText('O');
+                ctx.fillText('O', 817 - (measure.width / 2), 250);
+                ctx.strokeText('O', 817 - (measure.width / 2), 250);
+
+                measure = ctx.measureText('P');
+                ctx.fillText('P', 922 - (measure.width / 2), 250);
+                ctx.strokeText('P', 922 - (measure.width / 2), 250);
+            }
             function drawKeys(ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 // Bottom C
@@ -495,7 +576,7 @@
                 ctx.stroke();
                 ctx.fill();
                 // G
-                
+
                 ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(495, 150);
