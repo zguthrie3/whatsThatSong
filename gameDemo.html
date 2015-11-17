@@ -389,30 +389,38 @@
                 71: 'G',
                 72: 'A',
                 74: 'B',
-                75: 'topC'
+                75: 'topC',
+                87: 'dFlat',
+                69: 'eFlat',
+                84: 'gFlat'
             };
 
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'black';
-                drawKeys(ctx);
+                drawKeys(ctx, null);
             }
 
-            function update() {
+            function update(ctx) {
                 document.onkeydown = function (e) {
                     var soundId = sounds[e.keyCode];
                     if (soundId) {
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
+                        drawKeys(ctx, 'bottomC');
                     } else {
                         alert("key not mapped : code is", e.keyCode);
                     }
                 }
+                document.onkeyup = function (e) {
+                    drawKeys(ctx, null);
+                }
             }
 
-function drawKeys(ctx) {
+            function drawKeys(ctx, note) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 // Bottom C
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(105, 150);
                 ctx.lineTo(105, 750);
@@ -421,10 +429,15 @@ function drawKeys(ctx) {
                 ctx.lineTo(150, 450);
                 ctx.lineTo(150, 150);
                 ctx.lineTo(105, 150);
+                ctx.closePath();
+                if (note == 'bottomC') {
+                    ctx.fillStyle = '#78ff87';
+                }
                 ctx.stroke();
                 ctx.fill();
 
                 // Lower D
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(225, 150);
                 ctx.lineTo(255, 150);
@@ -435,10 +448,12 @@ function drawKeys(ctx) {
                 ctx.lineTo(195, 450);
                 ctx.lineTo(225, 450);
                 ctx.lineTo(225, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
                 
                 // Lower E
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(330, 150);
                 ctx.lineTo(375, 150);
@@ -447,10 +462,12 @@ function drawKeys(ctx) {
                 ctx.lineTo(285, 450);
                 ctx.lineTo(330, 450);
                 ctx.lineTo(330, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
 
                 // Lower F
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(375, 150);
                 ctx.lineTo(375, 750);
@@ -459,10 +476,11 @@ function drawKeys(ctx) {
                 ctx.lineTo(420, 450);
                 ctx.lineTo(420, 150);
                 ctx.lineTo(375, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
-
                 // G
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(495, 150);
                 ctx.lineTo(525, 150);
@@ -473,10 +491,12 @@ function drawKeys(ctx) {
                 ctx.lineTo(465, 450);
                 ctx.lineTo(495, 450);
                 ctx.lineTo(495, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
 
                 // A
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(585, 150);
                 ctx.lineTo(615, 150);
@@ -487,10 +507,12 @@ function drawKeys(ctx) {
                 ctx.lineTo(555, 450);
                 ctx.lineTo(585, 450);
                 ctx.lineTo(585, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
 
                 // B
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(690, 150);
                 ctx.lineTo(735, 150);
@@ -499,10 +521,12 @@ function drawKeys(ctx) {
                 ctx.lineTo(645, 450);
                 ctx.lineTo(690, 450);
                 ctx.lineTo(690, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
 
                 // Top C
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(735, 150);
                 ctx.lineTo(735, 750);
@@ -511,10 +535,12 @@ function drawKeys(ctx) {
                 ctx.lineTo(780, 450);
                 ctx.lineTo(780, 150);
                 ctx.lineTo(735, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
 
                 // Upper D
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(855, 150);
                 ctx.lineTo(885, 150);
@@ -525,10 +551,12 @@ function drawKeys(ctx) {
                 ctx.lineTo(825, 450);
                 ctx.lineTo(855, 450);
                 ctx.moveTo(855, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
 
                 // Upper E
+                ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(960, 150);
                 ctx.lineTo(1005, 150);
@@ -537,27 +565,38 @@ function drawKeys(ctx) {
                 ctx.lineTo(915, 450);
                 ctx.lineTo(960, 450);
                 ctx.lineTo(960, 150);
+                ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
 
                 // Upper F
+                ctx.fillStyle = 'white';
                 ctx.fillRect(1005, 150, 90, 600);
                 ctx.strokeRect(1005, 150, 90, 600);
 
-                ctx.fillStyle = 'black';
                 // Lower C#/D flat
+                ctx.fillStyle = 'black';
+                if (note == sounds[65]) {
+                    ctx.fillStyle = 'red';
+                }
                 ctx.fillRect(150, 150, 75, 300);
                 // Lower D#/E flat
+                ctx.fillStyle = 'black';
                 ctx.fillRect(255, 150, 75, 300);
                 // F#/G flat
+                ctx.fillStyle = 'black';
                 ctx.fillRect(420, 150, 75, 300);
                 // G#/A flat
+                ctx.fillStyle = 'black';
                 ctx.fillRect(525, 150, 60, 300);
                 // A#/B Flat
+                ctx.fillStyle = 'black';
                 ctx.fillRect(615, 150, 75, 300);
                 // Upper C#/D flat
+                ctx.fillStyle = 'black';
                 ctx.fillRect(780, 150, 75, 300);
                 // Upper D#/E flat
+                ctx.fillStyle = 'black';
                 ctx.fillRect(885, 150, 75, 300);
             }
             return {
