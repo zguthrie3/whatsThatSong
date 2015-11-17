@@ -383,16 +383,23 @@
             var wasButtonDown = false;
             var sounds = {
                 65: 'bottomC',
+                87: 'dFlat',
                 83: 'D',
+                69: 'eFlat',
                 68: 'E',
                 70: 'F',
+                84: 'gFlat',
                 71: 'G',
+                89: 'aFlat',
                 72: 'A',
+                85: 'bFlat',
                 74: 'B',
                 75: 'topC',
-                87: 'dFlat',
-                69: 'eFlat',
-                84: 'gFlat'
+                79: 'upperDflat',
+                76: 'upperD',
+                80: 'upperEflat',
+                186: 'upperE',
+                222: 'upperF'
             };
 
             function draw(canvas, ctx) {
@@ -408,8 +415,6 @@
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
                         drawKeys(ctx, 'bottomC');
-                    } else {
-                        alert("key not mapped : code is", e.keyCode);
                     }
                 }
                 document.onkeyup = function (e) {
