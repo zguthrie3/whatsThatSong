@@ -392,7 +392,26 @@
                 75: 'topC'
             };
 
-            function drawKeys(ctx) {
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'black';
+                drawKeys(ctx);
+            }
+
+            function update() {
+                document.onkeydown = function (e) {
+                    var soundId = sounds[e.keyCode];
+                    if (soundId) {
+                        var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
+                        sound.play();
+                    } else {
+                        alert("key not mapped : code is", e.keyCode);
+                    }
+                }
+            }
+
+function drawKeys(ctx) {
                 // Bottom C
                 ctx.beginPath();
                 ctx.moveTo(105, 150);
@@ -523,6 +542,7 @@
 
                 // Upper F
                 ctx.fillRect(1005, 150, 90, 600);
+                ctx.strokeRect(1005, 150, 90, 600);
 
                 ctx.fillStyle = 'black';
                 // Lower C#/D flat
@@ -539,24 +559,6 @@
                 ctx.fillRect(780, 150, 75, 300);
                 // Upper D#/E flat
                 ctx.fillRect(885, 150, 75, 300);
-            }
-            function draw(canvas, ctx) {
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                ctx.fillStyle = 'white';
-                ctx.strokeStyle = 'black';
-                drawKeys(ctx);
-            }
-
-            function update() {
-                document.onkeydown = function (e) {
-                    var soundId = sounds[e.keyCode];
-                    if (soundId) {
-                        var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
-                        sound.play();
-                    } else {
-                        alert("key not mapped : code is", e.keyCode);
-                    }
-                }
             }
             return {
                 draw: draw,
