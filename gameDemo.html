@@ -379,7 +379,7 @@
         }(mouseClick));
 
         pianoScreen = (function (input) {
-
+            var currentNote;
             var wasButtonDown = false;
             var sounds = {
                 65: 'bottomC',
@@ -405,7 +405,7 @@
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.strokeStyle = 'black';
-                drawKeys(ctx, null);
+                drawKeys(ctx);
             }
 
             function update(ctx) {
@@ -414,15 +414,16 @@
                     if (soundId) {
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
-                        drawKeys(ctx, 'bottomC');
+                        currentNote = sounds[e.keyCode];
+                        drawKeys(ctx);
                     }
                 }
                 document.onkeyup = function (e) {
-                    drawKeys(ctx, null);
+                    currentNote = null;
                 }
             }
 
-            function drawKeys(ctx, note) {
+            function drawKeys(ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 // Bottom C
                 ctx.fillStyle = 'white';
@@ -435,8 +436,8 @@
                 ctx.lineTo(150, 150);
                 ctx.lineTo(105, 150);
                 ctx.closePath();
-                if (note == 'bottomC') {
-                    ctx.fillStyle = '#78ff87';
+                if (currentNote && currentNote === 'bottomC') {
+                    ctx.fillStyle = '#b22937';
                 }
                 ctx.stroke();
                 ctx.fill();
@@ -454,6 +455,9 @@
                 ctx.lineTo(225, 450);
                 ctx.lineTo(225, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'D') {
+                    ctx.fillStyle = '#de5003';
+                }
                 ctx.stroke();
                 ctx.fill();
                 
@@ -468,6 +472,9 @@
                 ctx.lineTo(330, 450);
                 ctx.lineTo(330, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'E') {
+                    ctx.fillStyle = '#efce10';
+                }
                 ctx.stroke();
                 ctx.fill();
 
@@ -482,9 +489,13 @@
                 ctx.lineTo(420, 150);
                 ctx.lineTo(375, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'F') {
+                    ctx.fillStyle = '#acd62a';
+                }
                 ctx.stroke();
                 ctx.fill();
                 // G
+                
                 ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.moveTo(495, 150);
@@ -497,6 +508,9 @@
                 ctx.lineTo(495, 450);
                 ctx.lineTo(495, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'G') {
+                    ctx.fillStyle = '#228b22';
+                }
                 ctx.stroke();
                 ctx.fill();
 
@@ -513,6 +527,9 @@
                 ctx.lineTo(585, 450);
                 ctx.lineTo(585, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'A') {
+                    ctx.fillStyle = '#93bde7';
+                }
                 ctx.stroke();
                 ctx.fill();
 
@@ -527,6 +544,9 @@
                 ctx.lineTo(690, 450);
                 ctx.lineTo(690, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'B') {
+                    ctx.fillStyle = '#575597';
+                }
                 ctx.stroke();
                 ctx.fill();
 
@@ -541,6 +561,9 @@
                 ctx.lineTo(780, 150);
                 ctx.lineTo(735, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'topC') {
+                    ctx.fillStyle = '#1f1d6d';
+                }
                 ctx.stroke();
                 ctx.fill();
 
@@ -557,6 +580,9 @@
                 ctx.lineTo(855, 450);
                 ctx.moveTo(855, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'upperD') {
+                    ctx.fillStyle = '#a670b8';
+                }
                 ctx.stroke();
                 ctx.fill();
 
@@ -571,37 +597,70 @@
                 ctx.lineTo(960, 450);
                 ctx.lineTo(960, 150);
                 ctx.closePath();
+                if (currentNote && currentNote === 'upperE') {
+                    ctx.fillStyle = '#a650a0';
+                }
                 ctx.stroke();
                 ctx.fill();
 
                 // Upper F
-                ctx.fillStyle = 'white';
+                if (currentNote && currentNote === 'upperF') {
+                    ctx.fillStyle = '#a2395b';
+                } else {
+                    ctx.fillStyle = 'white';
+                }
                 ctx.fillRect(1005, 150, 90, 600);
                 ctx.strokeRect(1005, 150, 90, 600);
 
                 // Lower C#/D flat
-                ctx.fillStyle = 'black';
-                if (note == sounds[65]) {
-                    ctx.fillStyle = 'red';
+                if (currentNote && currentNote === 'dFlat') {
+                    ctx.fillStyle = '#c11c17';
+                } else {
+                    ctx.fillStyle = 'black';
                 }
                 ctx.fillRect(150, 150, 75, 300);
+
                 // Lower D#/E flat
-                ctx.fillStyle = 'black';
+                if (currentNote && currentNote === 'eFlat') {
+                    ctx.fillStyle = '#e27a1d';
+                } else {
+                    ctx.fillStyle = 'black';
+                }
                 ctx.fillRect(255, 150, 75, 300);
                 // F#/G flat
-                ctx.fillStyle = 'black';
+                if (currentNote && currentNote === 'gFlat') {
+                    ctx.fillStyle = '#4ca82b';
+                } else {
+                    ctx.fillStyle = 'black';
+                }
                 ctx.fillRect(420, 150, 75, 300);
                 // G#/A flat
-                ctx.fillStyle = 'black';
+                if (currentNote && currentNote === 'aFlat') {
+                    ctx.fillStyle = '#20b2aa';
+                } else {
+                    ctx.fillStyle = 'black';
+                };
                 ctx.fillRect(525, 150, 60, 300);
                 // A#/B Flat
-                ctx.fillStyle = 'black';
+                if (currentNote && currentNote === 'bFlat') {
+                    ctx.fillStyle = '#6f6da7';
+                } else {
+                    ctx.fillStyle = 'black';
+                }
                 ctx.fillRect(615, 150, 75, 300);
                 // Upper C#/D flat
-                ctx.fillStyle = 'black';
+                if (currentNote && currentNote === 'upperDflat') {
+                    ctx.fillStyle = '#502e72';
+                } else {
+                    ctx.fillStyle = 'black';
+                }
                 ctx.fillRect(780, 150, 75, 300);
                 // Upper D#/E flat
-                ctx.fillStyle = 'black';
+                if (currentNote && currentNote === 'upperEflat') {
+                    ctx.fillStyle = '#a63570';
+                } else {
+                    ctx.fillStyle = 'black';
+                }
                 ctx.fillRect(885, 150, 75, 300);
             }
             return {
