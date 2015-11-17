@@ -300,9 +300,53 @@
                     ctx.fillText(midLabel, 225 + (i * 150) - (midMeasure.width / 2), 515);
                     ctx.strokeText(midLabel, 225 + (i * 150) - (midMeasure.width / 2), 515);
 
-                    ctx.fillText(botLabel, 225 + (i * 150) - (botMeasure.width / 2), 665);
-                    ctx.strokeText(botLabel, 225 + (i * 150) - (botMeasure.width / 2), 665);                
+                    ctx.fillText(botLabel, 225 + (i * 150) - (botMeasure.width / 2) - 5, 665);
+                    ctx.strokeText(botLabel, 225 + (i * 150) - (botMeasure.width / 2) - 5, 665);                
                 }
+
+                var measure = ctx.measureText('Classical');
+                ctx.fillText('Classical', 225 - (measure.width / 2) - 5, 225);
+                ctx.strokeText('Classical', 225 - (measure.width / 2) - 5, 225);
+
+                measure = ctx.measureText('Nursery');
+                ctx.fillText('Nursery', 375 - (measure.width / 2), 195);
+                ctx.strokeText('Nursery', 375 - (measure.width / 2), 195);
+
+                measure = ctx.measureText('Rhymes');
+                ctx.fillText('Rhymes', 375 - (measure.width / 2), 255);
+                ctx.strokeText('Rhymes', 375 - (measure.width / 2), 255);
+
+                measure = ctx.measureText('On the');
+                ctx.fillText('On the', 525 - (measure.width / 2), 195);
+                ctx.strokeText('On the', 525 - (measure.width / 2), 195);
+
+                measure = ctx.measureText('Radio');
+                ctx.fillText('Radio', 525 - (measure.width / 2), 255);
+                ctx.strokeText('Radio', 525 - (measure.width / 2), 255);
+
+                measure = ctx.measureText('One Hit');
+                ctx.fillText('One Hit', 675 - (measure.width / 2), 195);
+                ctx.strokeText('One Hit', 675 - (measure.width / 2), 195);
+
+                measure = ctx.measureText('Wonders');
+                ctx.fillText('Wonders', 675 - (measure.width / 2), 255);
+                ctx.strokeText('Wonders', 675 - (measure.width / 2), 255);
+
+                measure = ctx.measureText('Classic');
+                ctx.fillText('Classic', 825 - (measure.width / 2), 195);
+                ctx.strokeText('Classic', 825 - (measure.width / 2), 195);
+
+                measure = ctx.measureText('Rock');
+                ctx.fillText('Rock', 825 - (measure.width / 2), 255);
+                ctx.strokeText('Rock', 825 - (measure.width / 2), 255);
+
+                measure = ctx.measureText('Game');
+                ctx.fillText('Game', 975 - (measure.width / 2), 195);
+                ctx.strokeText('Game', 975 - (measure.width / 2), 195);
+
+                measure = ctx.measureText('Music');
+                ctx.fillText('Music', 975 - (measure.width / 2), 255);
+                ctx.strokeText('Music', 975 - (measure.width / 2), 255);
             }
             function update() {
                 var isButtonDown = input.isButtonDown();
