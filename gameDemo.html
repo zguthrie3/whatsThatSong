@@ -380,6 +380,7 @@
 
         pianoScreen = (function (input) {
 
+            var wasButtonDown = false;
             var sounds = {
                 65: 'bottomC',
                 83: 'D',
@@ -390,8 +391,160 @@
                 74: 'B',
                 75: 'topC'
             };
+
+            function drawKeys(ctx) {
+                // Bottom C
+                ctx.beginPath();
+                ctx.moveTo(105, 150);
+                ctx.lineTo(105, 750);
+                ctx.lineTo(195, 750);
+                ctx.lineTo(195, 450);
+                ctx.lineTo(150, 450);
+                ctx.lineTo(150, 150);
+                ctx.lineTo(105, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // Lower D
+                ctx.beginPath();
+                ctx.moveTo(225, 150);
+                ctx.lineTo(255, 150);
+                ctx.lineTo(255, 450);
+                ctx.lineTo(285, 450);
+                ctx.lineTo(285, 750);
+                ctx.lineTo(195, 750);
+                ctx.lineTo(195, 450);
+                ctx.lineTo(225, 450);
+                ctx.lineTo(225, 150);
+                ctx.stroke();
+                ctx.fill();
+                
+                // Lower E
+                ctx.beginPath();
+                ctx.moveTo(330, 150);
+                ctx.lineTo(375, 150);
+                ctx.lineTo(375, 750);
+                ctx.lineTo(285, 750);
+                ctx.lineTo(285, 450);
+                ctx.lineTo(330, 450);
+                ctx.lineTo(330, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // Lower F
+                ctx.beginPath();
+                ctx.moveTo(375, 150);
+                ctx.lineTo(375, 750);
+                ctx.lineTo(465, 750);
+                ctx.lineTo(465, 450);
+                ctx.lineTo(420, 450);
+                ctx.lineTo(420, 150);
+                ctx.lineTo(375, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // G
+                ctx.beginPath();
+                ctx.moveTo(495, 150);
+                ctx.lineTo(525, 150);
+                ctx.lineTo(525, 450);
+                ctx.lineTo(555, 450);
+                ctx.lineTo(555, 750);
+                ctx.lineTo(465, 750);
+                ctx.lineTo(465, 450);
+                ctx.lineTo(495, 450);
+                ctx.lineTo(495, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // A
+                ctx.beginPath();
+                ctx.moveTo(585, 150);
+                ctx.lineTo(615, 150);
+                ctx.lineTo(615, 450);
+                ctx.lineTo(645, 450);
+                ctx.lineTo(645, 750);
+                ctx.lineTo(555, 750);
+                ctx.lineTo(555, 450);
+                ctx.lineTo(585, 450);
+                ctx.lineTo(585, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // B
+                ctx.beginPath();
+                ctx.moveTo(690, 150);
+                ctx.lineTo(735, 150);
+                ctx.lineTo(735, 750);
+                ctx.lineTo(645, 750);
+                ctx.lineTo(645, 450);
+                ctx.lineTo(690, 450);
+                ctx.lineTo(690, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // Top C
+                ctx.beginPath();
+                ctx.moveTo(735, 150);
+                ctx.lineTo(735, 750);
+                ctx.lineTo(825, 750);
+                ctx.lineTo(825, 450);
+                ctx.lineTo(780, 450);
+                ctx.lineTo(780, 150);
+                ctx.lineTo(735, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // Upper D
+                ctx.beginPath();
+                ctx.moveTo(855, 150);
+                ctx.lineTo(885, 150);
+                ctx.lineTo(885, 450);
+                ctx.lineTo(915, 450);
+                ctx.lineTo(915, 750);
+                ctx.lineTo(825, 750);
+                ctx.lineTo(825, 450);
+                ctx.lineTo(855, 450);
+                ctx.moveTo(855, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // Upper E
+                ctx.beginPath();
+                ctx.moveTo(960, 150);
+                ctx.lineTo(1005, 150);
+                ctx.lineTo(1005, 750);
+                ctx.lineTo(915, 750);
+                ctx.lineTo(915, 450);
+                ctx.lineTo(960, 450);
+                ctx.lineTo(960, 150);
+                ctx.stroke();
+                ctx.fill();
+
+                // Upper F
+                ctx.fillRect(1005, 150, 90, 600);
+
+                ctx.fillStyle = 'black';
+                // Lower C#/D flat
+                ctx.fillRect(150, 150, 75, 300);
+                // Lower D#/E flat
+                ctx.fillRect(255, 150, 75, 300);
+                // F#/G flat
+                ctx.fillRect(420, 150, 75, 300);
+                // G#/A flat
+                ctx.fillRect(525, 150, 60, 300);
+                // A#/B Flat
+                ctx.fillRect(615, 150, 75, 300);
+                // Upper C#/D flat
+                ctx.fillRect(780, 150, 75, 300);
+                // Upper D#/E flat
+                ctx.fillRect(885, 150, 75, 300);
+            }
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'black';
+                drawKeys(ctx);
             }
 
             function update() {
