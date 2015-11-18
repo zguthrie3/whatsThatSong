@@ -29,6 +29,9 @@
         var numPlayers;
         var currentPlayer = 1;
         var players = [{score: 0}];
+        var currentSong;
+        var songs = [];
+        
         var title = 'What\'s that song?';
 
         function beginLoop() {
@@ -227,6 +230,9 @@
                 var x1, x2, x3;
                 var y1, y2, y3;
                 var teamOne, teamTwo, teamThree;
+                var songTitles = ['odeToJoy', 'twinkleStar', 'shutUpandDance', 'callMeMaybe', 'smokeOnWater', 'mario',
+                            '1812', 'oldMcDonald', 'hotlineBling', 'takeOnMe', 'highwayStar', 'tetris',
+                            'valkyries', 'popGoesWeasel', 'animals', 'wannabe', 'sweetChild', 'clockTown']; 
 
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#78ff87';
@@ -235,11 +241,13 @@
                     for (var j = 0; j < 6; j++) {
                         var num = (i * 6) + j
                         buttons[num] = {x: 150 + (j * 150), y: 140 + (i * 150), w: 150, h: 150};
-                        ctx.fillRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
-                        ctx.strokeRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
+                        songs[num] = {title: songTitles[num], x: 150 + (j * 150), y: 140 + (i * 150)};
                     }
                 }
-                
+                for (var num = 0; num < 24; num++) {
+                    ctx.fillRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
+                    ctx.strokeRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
+                }
                 ctx.font = '120px Tangerine';
                 centerText(ctx, title, 100);
 
@@ -361,12 +369,23 @@
                 ctx.fillText('Music', 975 - (measure.width / 2), 255);
                 ctx.strokeText('Music', 975 - (measure.width / 2), 255);
             }
+
+            function getSong(button) {
+                var song = null;
+                if (button.x === 300) {
+                    if (button.y === 290) {
+                        song = songs[1].title;
+                    }
+                }
+                return song;
+            }
             function update() {
                 canvas.addEventListener('click', function(e) {
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
                     if (button !== null && button.y > 150) {
                         transitioning = true;
                         currentTile = button;
+                        currentSong = getSong(button);
                         startScreen = pianoScreen;
                     }
                 }, false);
