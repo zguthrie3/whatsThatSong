@@ -1,0 +1,50 @@
+listenScreen = (function (input) {
+			var b = [{x: 425, y: 500, w: 150, h: 50}, {x: 625, y: 500, w: 150, h: 50}];
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '172px Tangerine';
+                centerText(ctx, 'Click to Listen to Song', 200); 
+				ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '100px Tangerine';
+                centerText(ctx, 'Player 1 put headphones on before listening', 400);
+				ctx.fillStyle = '#000000';
+                for (var i = 0; i < b.length; i++) {
+                    ctx.fillRect(b[i].x, b[i].y, b[i].w, b[i].h)
+                }
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('Listen', b[0].x + 28, b[0].y+ 40);
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('Continue', b[1].x + 15, b[1].y+ 40);
+				
+            };
+            function play() {
+				var audio = document.getElementById("audio");
+				
+            }
+           
+			function update() {
+				canvas.addEventListener('click', function(e) {
+					
+					var button = buttonCollision(b, e.offsetX, e.offsetY);
+                    if (button == b[0]) {
+                        audio.play();
+						
+                    } else if (button == b[1]) {
+						transitioning = true;
+						startScreen = pianoScreen;
+					}
+					
+				}, false);
+            }
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
