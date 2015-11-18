@@ -1,0 +1,49 @@
+continueScreen = (function (input) {
+            var bs = [{x: 425, y: 450, w: 150, h: 50}, {x: 625, y: 450, w: 150, h: 50}];
+
+
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '100px Tangerine';
+                centerText(ctx, 'Would you like to continue?', 200);
+				ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '50px Tangerine'
+                ctx.fillStyle = '#000000';
+                for (var i = 0; i < bs.length; i++) {
+                    ctx.fillRect(bs[i].x, bs[i].y, bs[i].w, bs[i].h)
+                } 
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('No', bs[0].x + 45, bs[0].y+ 40);
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('Yes', bs[1].x + 45, bs[1].y+ 40);
+            }
+            
+           
+            function update() {
+				canvas.addEventListener('click', function(e) {
+                    var button = buttonCollision(bs, e.offsetX, e.offsetY);
+                    if (button == bs[0]) {
+                        transitioning = true;
+                        numPlayers = numPlayers;
+                        startScreen = gameScreen;
+                    } else if (button == bs[1]) {
+                        transitioning = true;
+                        players[1] = {score: 0};
+                        numPlayers = numPlayers;
+                        startScreen = pianoScreen;
+                    }
+                }, false);
+            }
+
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
