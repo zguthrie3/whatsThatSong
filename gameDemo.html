@@ -32,7 +32,11 @@
         var currentSong;
         var songs = [];
         var transcripts = {
-            twinkleStar: ['65657171727271', '70706868838365', '71717070686883']
+            twinkleStar: [
+            //'6583687071727475', 
+            '65657171727271', 
+            '70706868838365', 
+            '71717070686883']
         };
         var recordRound = 1;
         
@@ -100,13 +104,6 @@
                 }
             }
             return isCollision;
-        }
-
-        function setNextPlayer() {
-            currentPlayer++;
-            if (currentPlayer == 4) {
-                currentPlayer = 1;
-            }
         }
 
         // define the setting screen for the game
@@ -404,6 +401,7 @@
         pianoScreen = (function (input) {
             var currentNote;
             var wasButtonDown = false;
+            var noteIterator = 0;
             var sounds = {
                 65: 'bottomC',
                 87: 'dFlat',
@@ -424,9 +422,8 @@
                 186: 'upperE',
                 222: 'upperF'
             };
-            var recording = [];
-            var noteCount = 0;
-            var transcription = null;
+            var noteString = '';
+            var transcription;
 
             function getTranscript(song) {
                 var transcript = null;
@@ -440,20 +437,19 @@
                 ctx.strokeStyle = 'black';
                 drawKeys(ctx);
                 labelKeys(ctx);
-                transcription = getTranscript(currentSong);
-                setTimeout(endRecording, 2000);
+                setTimeout(endRecording, 10000);
             }
 
             function update(ctx) {
                 document.onkeydown = function (e) {
                     var soundId = sounds[e.keyCode];
+                    transcription = getTranscript(currentSong);
                     if (soundId) {
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
                         currentNote = sounds[e.keyCode];
+                        noteString = noteString.concat(e.keyCode);
                         drawKeys(ctx);
-                        recording[noteCount] = e.keyCode;
-                        noteCount++;
                     }
                 }
                 document.onkeyup = function (e) {
@@ -462,13 +458,29 @@
             }
 
             function endRecording() {
-                var noteCheck = null
-                if (transcription) {
-                    noteCheck = transcription.substring(0, 2);
+                var scriptSeg;
+                var recordSeg;
+
+                for (var i = 0; i < noteString.length / 2; i++) {
+                    if (transcription) {
+                        if (2 * i + 1 < transcription.length) {
+                            scriptSeg = transcription.substring(2 * i, 2 * i + 2);
+                            recordSeg = noteString.substring(2 * i, 2 * i + 2);
+                            if (scriptSeg === recordSeg) {
+                                players[currentPlayer - 1].score += 50;
+                            } else {
+                                players[currentPlayer - 1].score -= 50;
+                            }
+                        } else {
+                            players[currentPlayer - 1].score -= 10;
+                        }
+                    }
                 }
-                alert(noteCheck);
+                
+                setNextPlayer();
                 startScreen = gameScreen;
             }
+
             function labelKeys(ctx) {
                 ctx.font = '66px Tangerine';
                 ctx.fillStyle = 'black';
