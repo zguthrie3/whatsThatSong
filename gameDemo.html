@@ -518,6 +518,7 @@
                 79: 'upperDflat',
                 76: 'upperD',
                 80: 'upperEflat',
+                // THESE KEYS DO NOT WORK WITH SCORE ALGORITHM CORRECTLY. TO FIX
                 186: 'upperE',
                 222: 'upperF'
             };
@@ -529,7 +530,13 @@
             function getTranscript(song) {
                 var transcript = null;
                 if (transcripts[song] !== null) {
-                    transcript = transcripts[song][0];
+                    if (recordRound == 1) {
+                        transcript = transcripts[song][0];
+                    } else if (recordRound == 2) {
+                        transcript = transcripts[song][1];
+                    } else if (recordRound == 3) {
+                        transcript = transcripts[song][2];
+                    }
                 }
                 return transcript;
             }
@@ -556,7 +563,7 @@
                 document.onkeyup = function (e) {
                     currentNote = null;
                 }
-                if (recordLength > 1000) {
+                if (recordLength === (500 || 1000 || 1500)) {
                     endRecording();
                 }
             }
@@ -592,12 +599,30 @@
                         }
                     }
                 }
-                nextPlayer();
-                startScreen = gameScreen;
+                if (recordRound === 3) {
+                    recordLength = 0;
+                    recordRound = 0;
+                    noteString = '';
+                    nextPlayer();
+                    startScreen = gameScreen;  
+                } else {
+                    recordLength = 0;
+                    noteString = '';
+                    recordRound++;
+                    startScreen = countdownScreen;
+                }
             }
 
             function nextPlayer() {
-                currentPlayer++; 
+                if (numPlayers !== 1) {
+                    if (numPlayers === 2 && currentPlayer === 2) {
+                        currentPlayer = 1;
+                    } else if (numPlayers === 3 && currentPlayer === 3) {
+                        currentPlayer = 1;
+                    } else {
+                        currentPlayer++;
+                    }
+                }
             }
             
             function labelKeys(ctx) {
