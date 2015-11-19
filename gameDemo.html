@@ -197,22 +197,25 @@
             }
 
             function update(canvas, elapsed) {
-                canvas.addEventListener('click', function(e) {
+                canvas.addEventListener('click', function _func(e) {
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
                     if (button == buttons[0]) {
                         transitioning = true;
                         numPlayers = 1;
+                        canvas.removeEventListener('click', _func);
                         startScreen = gameScreen;
                     } else if (button == buttons[1]) {
                         transitioning = true;
                         players[1] = {idNum: 2, score: 0};
                         numPlayers = 2;
+                        canvas.removeEventListener('click', _func);
                         startScreen = gameScreen;
                     } else if (button == buttons[2]) {
                         transitioning = true;
                         players[1] = {idNum: 2, score: 0};
                         players[2] = {idNum: 3, score: 0};
                         numPlayers = 3;
+                        canvas.removeEventListener('click', _func);
                         startScreen = gameScreen;
                     }
                 }, false);
@@ -384,12 +387,13 @@
                 return song;
             }
             function update() {
-                canvas.addEventListener('click', function(e) {
+                canvas.addEventListener('click', function _func(e) {
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
                     if (button !== null && button.y > 150) {
                         transitioning = true;
                         currentTile = button;
                         currentSong = getSong(button);
+                        canvas.removeEventListener('click', _func);
                         startScreen = countdownScreen;
                     }
                 }, false);
@@ -423,7 +427,7 @@
                     if (recordRound === 0) {
                         centerText(ctx, 'Listen!', 600);
                     } else {
-                        centerText(ctx, '0', 200);
+                        centerText(ctx, 'Record!', 600);
                     }
                 } else {
                     next = true;
@@ -436,7 +440,11 @@
                     transitioning = true;
                     count = 0;
                     next = false;
-                    startScreen = listenScreen;
+                    if (recordRound === 0) {
+                        startScreen = listenScreen;
+                    } else {
+                        startScreen = pianoScreen;
+                    }
                 }
             }
 
@@ -471,13 +479,14 @@
                 ctx.fillText('Continue', buttons[1].x + 15, buttons[1].y + 40);
             }
             function update(canvas, elapsed) {
-                canvas.addEventListener('click', function(e) {
+                canvas.addEventListener('click', function _func(e) {
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
                     if (button == buttons[0]) {                      
                         var sound = new Audio(filePath);
                         sound.play();
-                    }
-                    if (button == buttons[1]) {
+                    } else if (button == buttons[1]) {
+                        recordRound = 1;
+                        canvas.addEventListener('click', _func)
                         startScreen = countdownScreen;
                     }
                 }, false);
