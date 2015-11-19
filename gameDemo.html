@@ -27,6 +27,7 @@
         var gameScreen;
         var continueScreen;
         var listenScreen;
+        var countdownScreen;
         var simpleClickSwitch;
         var numPlayers;
         var currentPlayer = 1;
@@ -40,7 +41,7 @@
             '70706868838365', 
             '71717070686883']
         };
-        var recordRound = 1;
+        var recordRound = 0;
         
         var title = 'What\'s that song?';
 
@@ -108,6 +109,58 @@
             return isCollision;
         }
 
+        // define the start screen
+        startScreen = (function (input) {
+
+            var greenVal = 0;
+            var direction = 1;
+            var transitioning = false;
+            var wasButtonDown = false;
+
+
+            function draw(canvas, ctx) {
+
+                var y = ctx.canvas.height / 2;
+                var color = 'rgb(0,' + greenVal + ',0)';
+
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '224px Tangerine';
+                centerText(ctx, title, y);
+
+                ctx.strokeStyke = 'white';
+                ctx.font = '60px Tangerine';
+                centerText(ctx, 'A project made by Christine St. Jean, Corey Salmon, and Zach Guthrie', y + 150);
+
+                ctx.fillStyle = color;
+                ctx.font = '60px Tangerine';
+                centerText(ctx, 'click to begin', y + 250);
+            }
+
+            function update() {
+
+                greenVal += 1 * direction;
+                if (greenVal > 225) direction = -1;
+                if (greenVal < 20) direction = 1;
+
+                var isButtonDown = input.isButtonDown();
+                var mouseJustClicked = !isButtonDown && wasButtonDown;
+
+                if (mouseJustClicked && !transitioning) {
+                    transitioning = true;
+                    startScreen = settingScreen;
+                }
+
+                wasButtonDown = isButtonDown;
+            }
+
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
+
         // define the setting screen for the game
         settingScreen = (function (input) {
             var wasButtonDown = false;
@@ -163,58 +216,6 @@
                         startScreen = gameScreen;
                     }
                 }, false);
-            }
-
-            return {
-                draw: draw,
-                update: update
-            };
-        }(mouseClick));
-
-        // define the start screen
-        startScreen = (function (input) {
-
-            var greenVal = 0;
-            var direction = 1;
-            var transitioning = false;
-            var wasButtonDown = false;
-
-
-            function draw(canvas, ctx) {
-
-                var y = ctx.canvas.height / 2;
-                var color = 'rgb(0,' + greenVal + ',0)';
-
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                ctx.fillStyle = '#78ff87';
-                ctx.strokeStyle = 'black';
-                ctx.font = '224px Tangerine';
-                centerText(ctx, title, y);
-
-                ctx.strokeStyke = 'white';
-                ctx.font = '60px Tangerine';
-                centerText(ctx, 'A project made by Christine St. Jean, Corey Salmon, and Zach Guthrie', y + 150);
-
-                ctx.fillStyle = color;
-                ctx.font = '60px Tangerine';
-                centerText(ctx, 'click to begin', y + 250);
-            }
-
-            function update() {
-
-                greenVal += 1 * direction;
-                if (greenVal > 225) direction = -1;
-                if (greenVal < 20) direction = 1;
-
-                var isButtonDown = input.isButtonDown();
-                var mouseJustClicked = !isButtonDown && wasButtonDown;
-
-                if (mouseJustClicked && !transitioning) {
-                    transitioning = true;
-                    startScreen = settingScreen;
-                }
-
-                wasButtonDown = isButtonDown;
             }
 
             return {
@@ -389,7 +390,7 @@
                         transitioning = true;
                         currentTile = button;
                         currentSong = getSong(button);
-                        startScreen = pianoScreen;
+                        startScreen = countdownScreen;
                     }
                 }, false);
             }
@@ -398,6 +399,93 @@
                 draw: draw,
                 update: update
             };
+        }(mouseClick));
+
+        countdownScreen = (function (input) {
+            var sec = 3;
+            var next = false;
+            var wasButtonDown = false;
+            var transitioning = false;
+            var count = 0;
+
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '172px Tangerine';
+                if (count < 50) {
+                    centerText(ctx, '3', 150);
+                } else if (count < 100) {
+                    centerText(ctx, '2', 300);
+                } else if (count < 150) {
+                    centerText(ctx, '1', 450);
+                } else if (count < 200) {
+                    if (recordRound === 0) {
+                        centerText(ctx, 'Listen!', 600);
+                    } else {
+                        centerText(ctx, '0', 200);
+                    }
+                } else {
+                    next = true;
+                }
+            }
+
+            function update(canvas, elapsed) {
+                count++;
+                if (next) {
+                    transitioning = true;
+                    count = 0;
+                    next = false;
+                    startScreen = listenScreen;
+                }
+            }
+
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
+
+        listenScreen = (function (input) {
+            var transitioning = false;
+            var buttons = [{x: 425, y: 500, w: 150, h: 50}, {x: 625, y: 500, w: 150, h: 50}];
+            var filePath;
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                filePath = './songs/' + currentSong + ".mp3";
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '172px Tangerine';
+                centerText(ctx, 'Click to Listen to Song', 200);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '100px Tangerine';
+                centerText(ctx, 'Player 1 put headphones on before listening', 400);
+                ctx.fillStyle = '#000000';
+                for (var i = 0; i < buttons.length; i++) {
+                    ctx.fillRect(buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h);
+                }
+                ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                ctx.fillText('Listen', buttons[0].x + 28, buttons[0].y + 40);
+                ctx.fillText('Continue', buttons[1].x + 15, buttons[1].y + 40);
+            }
+            function update(canvas, elapsed) {
+                canvas.addEventListener('click', function(e) {
+                    var button = buttonCollision(buttons, e.offsetX, e.offsetY);
+                    if (button == buttons[0]) {                      
+                        var sound = new Audio(filePath);
+                        sound.play();
+                    }
+                    if (button == buttons[1]) {
+                        startScreen = countdownScreen;
+                    }
+                }, false);
+            }
+            return {
+                draw: draw,
+                update: update
+            }
         }(mouseClick));
 
         pianoScreen = (function (input) {
@@ -426,6 +514,7 @@
             };
             var noteString = '';
             var transcription;
+            var recordLength = 0;
             
 
             function getTranscript(song) {
@@ -440,9 +529,10 @@
                 ctx.strokeStyle = 'black';
                 drawKeys(ctx);
                 labelKeys(ctx);
+                recordLength++;
             }
 
-            function update(ctx) {
+            function update() {
                 document.onkeydown = function (e) {
                     var soundId = sounds[e.keyCode];
                     transcription = getTranscript(currentSong);
@@ -456,6 +546,9 @@
                 }
                 document.onkeyup = function (e) {
                     currentNote = null;
+                }
+                if (recordLength > 1000) {
+                    endRecording();
                 }
             }
 
@@ -817,13 +910,11 @@
                 }
                 ctx.fillRect(885, 150, 75, 300);
             }
-            setTimeout(endRecording, 10000);
             return {
                 draw: draw,
                 update: update
             };
         }(mouseClick));
-
 
         beginLoop();
     </script>
