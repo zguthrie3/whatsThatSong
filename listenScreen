@@ -1,4 +1,8 @@
+<<<<<<< HEAD
         listenScreen = (function (input) {
+=======
+listenScreen = (function (input) {
+>>>>>>> origin/master
 			var b = [{x: 425, y: 500, w: 150, h: 50}, {x: 625, y: 500, w: 150, h: 50}];
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
