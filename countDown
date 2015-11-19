@@ -1,0 +1,38 @@
+timeCountDownScreen = (function (input) {
+    var sec = 3;
+	var next = false;
+	var wasButtonDown = false;
+    var transitioning = false;
+    var count = 0;
+
+    function draw(canvas, ctx) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+		ctx.fillStyle = '#78ff87';
+		ctx.strokeStyle = 'black';
+		ctx.font = '172px Tangerine';
+		if (count < 200) {
+			centerText(ctx, '3', 200);
+		} else if (count < 400) {
+			centerText(ctx, '2', 200);
+		} else if (count < 600) {
+		    centerText(ctx, '1', 200);
+		} else if (count < 800){
+			centerText(ctx, '0', 200);
+		} else {
+		    next = true;
+		}
+    }
+
+    function update(canvas, elapsed) {
+        count++;
+        if (next) {
+            transitioning = true;
+            startScreen = pianoScreen;
+        }
+    }
+
+    return {
+        draw: draw,
+        update: update
+    };
+}(mouseClick));
