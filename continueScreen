@@ -1,4 +1,4 @@
-continueScreen = (function (input) {
+    continueScreen = (function (input) {
             var bs = [{x: 425, y: 450, w: 150, h: 50}, {x: 625, y: 450, w: 150, h: 50}];
 
 
