@@ -1,0 +1,38 @@
+resultsScreen = (function (input) {
+            var greenVal = 0;
+            var direction = 1;
+            var transitioning = false;
+            var wasButtonDown = false;
+
+
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '200px Tangerine';
+                centerText(ctx, 'CORRECT!', 600);             
+            }
+            
+           
+            function update() {
+
+                greenVal += 1 * direction;
+                if (greenVal > 225) direction = -1;
+                if (greenVal < 20) direction = 1;
+
+                var isButtonDown = input.isButtonDown();
+                var mouseJustClicked = !isButtonDown && wasButtonDown;
+
+                if (mouseJustClicked && !transitioning) {
+                    transitioning = true;
+                    startScreen = gameScreen;
+                }
+
+                wasButtonDown = isButtonDown;
+            }
+
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));	

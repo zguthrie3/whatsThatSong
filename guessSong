@@ -1,0 +1,80 @@
+guessSong = (function (input) {
+            var wasButtonDown = false;
+            var transitioning = false;
+            var buttons = [{x: 120, y: 300, w: 800, h: 50},
+                            {x: 120, y: 400, w: 800, h: 50},
+                            {x: 120, y: 500, w: 800, h: 50},
+                            {x: 120, y: 600, w: 800, h: 50}];
+            var bs = [{x: 60, y: 300, w: 50, h: 50},
+                            {x: 60, y: 400, w: 50, h: 50},
+                            {x: 60, y: 500, w: 50, h: 50},
+                            {x: 60, y: 600, w: 50, h: 50}];
+
+	
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                ctx.font = '172px Tangerine';
+                centerText(ctx, 'Guess the Song', 200);
+
+                ctx.fillStyle = '#000000';
+                for (var i = 0; i < buttons.length; i++) {
+                    ctx.fillRect(buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h);
+					for (var j = 0; j < bs.length; j++) {
+						ctx.fillRect(bs[i].x, bs[i].y, bs[i].w, bs[i].h)
+					}     
+                }
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('Song 1', bs[0].x + 80, bs[0].y+ 37);
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('Song 2', bs[1].x + 80, bs[1].y+ 37);
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('Song 3', bs[2].x + 80, bs[2].y+ 37);
+				ctx.font = '50px Tangerine';
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('A');
+                ctx.fillText('Song 4', bs[3].x + 80, bs[3].y+ 37);
+                
+            }
+            
+           
+            function update(canvas, elapsed) {
+                canvas.addEventListener('click', function(e) {
+                    var button = buttonCollision(bs, e.offsetX, e.offsetY);
+                    if (button == bs[0]) {
+                        transitioning = true;
+                        numPlayers = numPlayers;
+                        startScreen = resultsScreen;
+                    } else if (button == bs[1]) {
+                        transitioning = true;
+                        players[1] = {score: 0};
+                        numPlayers = numPlayers;
+                        startScreen = resultsScreen;
+                    } else if (button == bs[2]) {
+                        transitioning = true;
+                        players[1] = {score: 0};
+                        players[2] = {score: 0};
+                        numPlayers = numPlayers;
+                        startScreen = resultsScreen;
+                    } else if (button == bs[3]) {
+                        transitioning = true;
+                        players[1] = {score: 0};
+                        players[2] = {score: 0};
+                        numPlayers = numPlayers;
+                        startScreen = resultsScreen;
+                    }
+                }, false);
+            }
+            
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));

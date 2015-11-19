@@ -25,10 +25,12 @@
         var startScreen;
         var settingScreen;
         var gameScreen;
+        var continueScreen;
+        var listenScreen;
         var simpleClickSwitch;
         var numPlayers;
         var currentPlayer = 1;
-        var players = [{score: 0}];
+        var players = [{idNum: 1, score: 0}];
         var currentSong;
         var songs = [];
         var transcripts = {
@@ -150,13 +152,13 @@
                         startScreen = gameScreen;
                     } else if (button == buttons[1]) {
                         transitioning = true;
-                        players[1] = {score: 0};
+                        players[1] = {idNum: 2, score: 0};
                         numPlayers = 2;
                         startScreen = gameScreen;
                     } else if (button == buttons[2]) {
                         transitioning = true;
-                        players[1] = {score: 0};
-                        players[2] = {score: 0};
+                        players[1] = {idNum: 2, score: 0};
+                        players[2] = {idNum: 3, score: 0};
                         numPlayers = 3;
                         startScreen = gameScreen;
                     }
@@ -424,6 +426,7 @@
             };
             var noteString = '';
             var transcription;
+            
 
             function getTranscript(song) {
                 var transcript = null;
@@ -437,7 +440,6 @@
                 ctx.strokeStyle = 'black';
                 drawKeys(ctx);
                 labelKeys(ctx);
-                setTimeout(endRecording, 10000);
             }
 
             function update(ctx) {
@@ -460,7 +462,6 @@
             function endRecording() {
                 var scriptSeg;
                 var recordSeg;
-
                 for (var i = 0; i < noteString.length / 2; i++) {
                     if (transcription) {
                         if (2 * i + 1 < transcription.length) {
@@ -489,11 +490,14 @@
                         }
                     }
                 }
-                
-                currentPlayer++;
+                nextPlayer();
                 startScreen = gameScreen;
             }
 
+            function nextPlayer() {
+                currentPlayer++; 
+            }
+            
             function labelKeys(ctx) {
                 ctx.font = '66px Tangerine';
                 ctx.fillStyle = 'black';
@@ -813,11 +817,14 @@
                 }
                 ctx.fillRect(885, 150, 75, 300);
             }
+            setTimeout(endRecording, 10000);
             return {
                 draw: draw,
                 update: update
             };
         }(mouseClick));
+
+
         beginLoop();
     </script>
 </body>
