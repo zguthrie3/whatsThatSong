@@ -25,6 +25,7 @@
         var startScreen;
         var settingScreen;
         var gameScreen;
+        var mainScreen;
         var continueScreen;
         var listenScreen;
         var countdownScreen;
@@ -36,7 +37,6 @@
         var songs = [];
         var transcripts = {
             twinkleStar: [
-            //'6583687071727475', 
             '65657171727271', 
             '70706868838365', 
             '71717070686883']
@@ -152,7 +152,7 @@
 
                 if (mouseJustClicked && !transitioning) {
                     transitioning = true;
-                    startScreen = settingScreen;
+                    startScreen = mainScreen;
                 }
 
                 wasButtonDown = isButtonDown;
@@ -162,6 +162,26 @@
                 draw: draw,
                 update: update
             };
+        }(mouseClick));
+
+        mainScreen = (function (input) {
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.font = '224px Tangerine';
+                centerText(ctx, 'Main Screen', 225);
+                ctx.font = '124px Tangerine';
+                centerText(ctx, 'Pick a game mode', 375);
+            }
+
+            function update() {
+
+            }
+
+            return {
+                draw: draw,
+                update: update
+            }
         }(mouseClick));
 
         // define the setting screen for the game
