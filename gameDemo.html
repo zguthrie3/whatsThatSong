@@ -17,7 +17,6 @@
     </style>
 </head>
 <body>
-    <audio id="bottomC" src="./soundEffects/bottomC.mp3"></audio>
     <canvas id="board"></canvas>
     <script>
         var canvas;
@@ -37,6 +36,7 @@
         var currentPlayer = 0;
         var players = [{idNum: 1, score: 0}];
         var currentSong;
+        var improvRecord = '';
         var songs = [];
         var currentNote = null;
         var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '6868707171706883'], twinkleStar: ['65657171727271', '70706868838365', '71717070686883']};
@@ -67,6 +67,7 @@
         var recordRound = 0;
         var guess = '';
         var title = 'What\'s that song?';
+        var improvRound = 0;
 
         function beginLoop() {
             var frameId = 0;
@@ -558,7 +559,8 @@
                         startScreen = settingScreen;
                     } else if (button == buttons[2]) {
                         canvas.removeEventListener('click', _func);
-                        startScreen = improvScreen;
+                        improvRound = 1;
+                        startScreen = countdownScreen;
                     }
                 }, false);
             }
@@ -904,7 +906,11 @@
                 } else if (count < 150) {
                     centerText(ctx, '1', 450);
                 } else if (count < 200) {
-                    if (recordRound === 0) {
+                    if (improvRound === 1) {
+                        centerText(ctx, 'Improv!', 600);
+                    } else if (improvRound === 2) {
+                        centerText(ctx, 'Replicate!', 600);
+                    } else if (recordRound === 0) {
                         centerText(ctx, 'Listen!', 600);
                     } else {
                         centerText(ctx, 'Record!', 600);
@@ -920,7 +926,10 @@
                     transitioning = true;
                     count = 0;
                     next = false;
-                    if (recordRound === 0) {
+
+                    if (improvRound === 1 || improvRound === 2) {
+                        startScreen = improvScreen;
+                    } else if (recordRound === 0) {
                         startScreen = listenScreen;
                     } else {
                         startScreen = pianoScreen;
@@ -1070,24 +1079,24 @@
                     if (button == bs[0]) {
                         canvas.removeEventListener('click', _func);
                         guess = choice1;
-                        endRound(1);
+                        endRound();
                     } else if (button == bs[1]) {
                         guess = choice2;
                         canvas.removeEventListener('click', _func);
-                        endRound(14);
+                        endRound();
                     } else if (button == bs[2]) {
                         canvas.removeEventListener('click', _func);
                         guess = choice3;
-                        endRound(9);
+                        endRound();
                     } else if (button == bs[3]) {
                         canvas.removeEventListener('click', _func);
                         guess = choice4;
-                        endRound(6);
+                        endRound();
                     }
                 }, false);
             }
             
-            function endRound(num) {
+            function endRound() {
                 recordRound = 0;
                 firstTime = true;
                 startScreen = gameScreen;
@@ -1191,6 +1200,63 @@
                     document.onkeydown = null;
                     document.onkeyup = null;
                     startScreen = countdownScreen;
+                }
+            }
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
+
+        improvScreen = (function (input) {
+            var noteString = '';
+            var recordLength = 0;
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = 'white';
+                drawKeys(ctx);
+                labelKeys(ctx);
+                recordLength++;
+            }
+
+            function update() {
+                document.onkeydown = function (e) {
+                    var soundId = sounds[e.keyCode];
+                    if (soundId) {
+                        var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
+                        sound.play();
+                        currentNote = sounds[e.keyCode];
+                        drawKeys(ctx);
+                        if (improvRound === 1) {
+                            improvRecord = improvRecord.concat(e.keyCode);
+                        } else {
+                            noteString = noteString.concat(e.keyCode);
+                        }
+                    }
+                }
+                document.onkeyup = function (e) {
+                    currentNote = null;
+                }
+                if (recordLength === (500 || 1000)) {
+                    endRecording();
+                }
+            }
+
+            function endRecording() {
+                if (improvRound === 1) {
+                    recordLength = 0;
+                    noteString = '';
+                    improvRound++;
+                    document.onkeydown = null;
+                    document.onkeyup = null;
+                    startScreen = countdownScreen;
+                } else {
+                    recordLength = 0;
+                    improvRecord = '';
+                    document.onkeydown = null;
+                    document.onkeyup;
+                    startScreen = mainScreen;
                 }
             }
             return {
