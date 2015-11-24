@@ -39,12 +39,7 @@
         var currentSong;
         var songs = [];
         var currentNote = null;
-        var transcripts = {
-            twinkleStar: [
-            '65657171727271', 
-            '70706868838365', 
-            '71717070686883']
-        };
+        var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '6868707171706883'], twinkleStar: ['65657171727271', '70706868838365', '71717070686883']};
         var songTitles = ['odeToJoy', 'twinkleStar', 'shutUpandDance', 'callMeMaybe', 'smokeOnWater', 'mario',
             '1812', 'oldMcDonald', 'hotlineBling', 'takeOnMe', 'highwayStar', 'tetris',
             'valkyries', 'popGoesWeasel', 'animals', 'wannabe', 'sweetChild', 'clockTown'];         
@@ -854,6 +849,12 @@
 
             function getSong(button) {
                 var song = null;
+
+                if (button.x === 150) {
+                    if (button.y === 290) {
+                        song = songs[0].title;
+                    }
+                }
                 if (button.x === 300) {
                     if (button.y === 290) {
                         song = songs[1].title;
@@ -976,6 +977,9 @@
         guessScreen = (function (input) {
             var wasButtonDown = false;
             var transitioning = false;
+            var choice1, choice2, choice3, choice4;
+            var firstTime = true;
+            var correct = Math.floor(Math.random() * 4);
             var buttons = [{x: 120, y: 300, w: 800, h: 50},
                             {x: 120, y: 400, w: 800, h: 50},
                             {x: 120, y: 500, w: 800, h: 50},
@@ -985,8 +989,51 @@
                             {x: 60, y: 500, w: 50, h: 50},
                             {x: 60, y: 600, w: 50, h: 50}];
 
-    
+            function pullTitles() {
+                var choice;
+                for (var i = 0; i < 4; i++) {
+                    choice = Math.floor(Math.random() * 18);
+                    if (correct === i) {
+                        if (i === 0) {
+                            choice1 = currentSong;
+                        } else if (i === 1) {
+                            choice2 = currentSong;
+                        } else if (i === 2) {
+                            choice3 = currentSong;
+                        } else {
+                            choice4 = currentSong;
+                        }
+                    } else {
+                        if (i === 0) {
+                            choice1 = songs[choice].title;
+                        } else if (i === 1) {
+                            if (choice1 !== songs[choice].title) {
+                                choice2 = songs[choice].title;
+                            } else {
+                                i--;
+                            }
+                        } else if (i === 2) {
+                            if ((choice1 || choice2) !== songs[choice].title) {
+                                choice3 = songs[choice].title;
+                            } else {
+                                i--;
+                            }
+                        } else {
+                            if ((choice1 || choice2 || choice3) !== songs[choice].title) {
+                                choice4 = songs[choice].title;
+                            } else {
+                                i--;
+                            }
+                        } 
+                    }
+                }
+            }
+
             function draw(canvas, ctx) {
+                if (firstTime) {
+                    firstTime = false;
+                    pullTitles();
+                }
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#78ff87';
                 ctx.strokeStyle = 'black';
@@ -1000,16 +1047,16 @@
                 }
                 ctx.font = '50px Tangerine';
                 ctx.fillStyle = 'white';
-                ctx.fillText(songs[1].title, bs[0].x + 80, bs[0].y + 37);
+                ctx.fillText(choice1, bs[0].x + 80, bs[0].y + 37);
                 ctx.font = '50px Tangerine';
                 ctx.fillStyle = 'white';
-                ctx.fillText(songs[14].title, bs[1].x + 80, bs[1].y + 37);
+                ctx.fillText(choice2, bs[1].x + 80, bs[1].y + 37);
                 ctx.font = '50px Tangerine';
                 ctx.fillStyle = 'white';
-                ctx.fillText(songs[9].title, bs[2].x + 80, bs[2].y + 37);
+                ctx.fillText(choice3, bs[2].x + 80, bs[2].y + 37);
                 ctx.font = '50px Tangerine';
                 ctx.fillStyle = 'white';
-                ctx.fillText(songs[6].title, bs[3].x + 80, bs[3].y + 37);
+                ctx.fillText(choice4, bs[3].x + 80, bs[3].y + 37);
                 
             }
             
@@ -1039,6 +1086,7 @@
             
             function endRound(num) {
                 recordRound = 0;
+                firstTime = true;
                 startScreen = gameScreen;
             }
             return {
