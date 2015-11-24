@@ -25,6 +25,7 @@
         var startScreen;
         var trainingScreen;
         var improvScreen;
+        var improvResultsScreen;
         var settingScreen;
         var gameScreen;
         var mainScreen;
@@ -136,326 +137,333 @@
             return isCollision;
         }
 
-            
-            function labelKeys(ctx) {
-                ctx.font = '66px Tangerine';
+        function labelKeys(ctx) {
+            ctx.font = '66px Tangerine';
+            ctx.fillStyle = 'black';
+
+            var measure = ctx.measureText('A');
+            ctx.fillText('A', 150 - (measure.width / 2), 650);
+            ctx.strokeText('A', 150 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('S');
+            ctx.fillText('S', 240 - (measure.width / 2), 650);
+            ctx.strokeText('S', 240 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('D');
+            ctx.fillText('D', 330 - (measure.width / 2), 650);
+            ctx.strokeText('D', 330 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('F');
+            ctx.fillText('F', 420 - (measure.width / 2), 650);
+            ctx.strokeText('F', 420 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('G');
+            ctx.fillText('G', 510 - (measure.width / 2), 650);
+            ctx.strokeText('G', 510 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('H');
+            ctx.fillText('H', 600 - (measure.width / 2), 650);
+            ctx.strokeText('H', 600 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('J');
+            ctx.fillText('J', 690 - (measure.width / 2), 650);
+            ctx.strokeText('J', 690 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('K');
+            ctx.fillText('K', 780 - (measure.width / 2), 650);
+            ctx.strokeText('K', 780 - (measure.width / 2), 650);
+
+            measure = ctx.measureText('L');
+            ctx.fillText('L', 870 - (measure.width / 2), 650);
+            ctx.strokeText('L', 870 - (measure.width / 2), 650);
+
+            measure = ctx.measureText(';');
+            ctx.fillText(';', 960 - (measure.width / 2), 650);
+            ctx.strokeText(';', 960 - (measure.width / 2), 650);
+                
+            measure = ctx.measureText(',');
+            ctx.fillText(',', 1050 - (measure.width / 2), 650);
+            ctx.strokeText(',', 1050 - (measure.width / 2), 650);
+                
+            ctx.fillStyle = 'white';
+            ctx.font = '54px Tangerine';
+            measure = ctx.measureText('Y');
+            ctx.fillText('Y', 552 - (measure.width / 2), 250);
+            ctx.strokeText('Y', 552 - (measure.width / 2), 250);
+
+            ctx.font = '60px Tangerine';
+            measure = ctx.measureText('W');
+            ctx.fillText('W', 187 - (measure.width / 2), 250);
+            ctx.strokeText('W', 187 - (measure.width / 2), 250);
+                
+            measure = ctx.measureText('E');
+            ctx.fillText('E', 292 - (measure.width / 2), 250);
+            ctx.strokeText('E', 292 - (measure.width / 2), 250);
+                
+            measure = ctx.measureText('T');
+            ctx.fillText('T', 452 - (measure.width / 2), 250);
+            ctx.strokeText('T', 452 - (measure.width / 2), 250);
+
+            measure = ctx.measureText('U');
+            ctx.fillText('U', 652 - (measure.width / 2), 250);
+            ctx.strokeText('U', 652 - (measure.width / 2), 250);
+
+            measure = ctx.measureText('O');
+            ctx.fillText('O', 817 - (measure.width / 2), 250);
+            ctx.strokeText('O', 817 - (measure.width / 2), 250);
+
+            measure = ctx.measureText('P');
+            ctx.fillText('P', 922 - (measure.width / 2), 250);
+            ctx.strokeText('P', 922 - (measure.width / 2), 250);
+        }
+
+        function drawKeys(ctx) {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            // Bottom C
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(105, 150);
+            ctx.lineTo(105, 750);
+            ctx.lineTo(195, 750);
+            ctx.lineTo(195, 450);
+            ctx.lineTo(150, 450);
+            ctx.lineTo(150, 150);
+            ctx.lineTo(105, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'bottomC') {
+                ctx.fillStyle = '#b22937';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // Lower D
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(225, 150);
+            ctx.lineTo(255, 150);
+            ctx.lineTo(255, 450);
+            ctx.lineTo(285, 450);
+            ctx.lineTo(285, 750);
+            ctx.lineTo(195, 750);
+            ctx.lineTo(195, 450);
+            ctx.lineTo(225, 450);
+            ctx.lineTo(225, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'D') {
+                ctx.fillStyle = '#de5003';
+            }
+            ctx.stroke();
+            ctx.fill();
+                
+            // Lower E
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(330, 150);
+            ctx.lineTo(375, 150);
+            ctx.lineTo(375, 750);
+            ctx.lineTo(285, 750);
+            ctx.lineTo(285, 450);
+            ctx.lineTo(330, 450);
+            ctx.lineTo(330, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'E') {
+                ctx.fillStyle = '#efce10';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // Lower F
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(375, 150);
+            ctx.lineTo(375, 750);
+            ctx.lineTo(465, 750);
+            ctx.lineTo(465, 450);
+            ctx.lineTo(420, 450);
+            ctx.lineTo(420, 150);
+            ctx.lineTo(375, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'F') {
+                ctx.fillStyle = '#acd62a';
+            }
+            ctx.stroke();
+            ctx.fill();
+            // G
+
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(495, 150);
+            ctx.lineTo(525, 150);
+            ctx.lineTo(525, 450);
+            ctx.lineTo(555, 450);
+            ctx.lineTo(555, 750);
+            ctx.lineTo(465, 750);
+            ctx.lineTo(465, 450);
+            ctx.lineTo(495, 450);
+            ctx.lineTo(495, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'G') {
+                ctx.fillStyle = '#228b22';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // A
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(585, 150);
+            ctx.lineTo(615, 150);
+            ctx.lineTo(615, 450);
+            ctx.lineTo(645, 450);
+            ctx.lineTo(645, 750);
+            ctx.lineTo(555, 750);
+            ctx.lineTo(555, 450);
+            ctx.lineTo(585, 450);
+            ctx.lineTo(585, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'A') {
+                ctx.fillStyle = '#93bde7';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // B
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(690, 150);
+            ctx.lineTo(735, 150);
+            ctx.lineTo(735, 750);
+            ctx.lineTo(645, 750);
+            ctx.lineTo(645, 450);
+            ctx.lineTo(690, 450);
+            ctx.lineTo(690, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'B') {
+                ctx.fillStyle = '#575597';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // Top C
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(735, 150);
+            ctx.lineTo(735, 750);
+            ctx.lineTo(825, 750);
+            ctx.lineTo(825, 450);
+            ctx.lineTo(780, 450);
+            ctx.lineTo(780, 150);
+            ctx.lineTo(735, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'topC') {
+                ctx.fillStyle = '#1f1d6d';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // Upper D
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(855, 150);
+            ctx.lineTo(885, 150);
+            ctx.lineTo(885, 450);
+            ctx.lineTo(915, 450);
+            ctx.lineTo(915, 750);
+            ctx.lineTo(825, 750);
+            ctx.lineTo(825, 450);
+            ctx.lineTo(855, 450);
+            ctx.moveTo(855, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'upperD') {
+                ctx.fillStyle = '#a670b8';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // Upper E
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(960, 150);
+            ctx.lineTo(1005, 150);
+            ctx.lineTo(1005, 750);
+            ctx.lineTo(915, 750);
+            ctx.lineTo(915, 450);
+            ctx.lineTo(960, 450);
+            ctx.lineTo(960, 150);
+            ctx.closePath();
+            if (currentNote && currentNote === 'upperE') {
+                ctx.fillStyle = '#a650a0';
+            }
+            ctx.stroke();
+            ctx.fill();
+
+            // Upper F
+            if (currentNote && currentNote === 'upperF') {
+                ctx.fillStyle = '#a2395b';
+            } else {
+                ctx.fillStyle = 'white';
+            }
+            ctx.fillRect(1005, 150, 90, 600);
+            ctx.strokeRect(1005, 150, 90, 600);
+
+            // Lower C#/D flat
+            if (currentNote && currentNote === 'dFlat') {
+                ctx.fillStyle = '#c11c17';
+            } else {
                 ctx.fillStyle = 'black';
-
-                var measure = ctx.measureText('A');
-                ctx.fillText('A', 150 - (measure.width / 2), 650);
-                ctx.strokeText('A', 150 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('S');
-                ctx.fillText('S', 240 - (measure.width / 2), 650);
-                ctx.strokeText('S', 240 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('D');
-                ctx.fillText('D', 330 - (measure.width / 2), 650);
-                ctx.strokeText('D', 330 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('F');
-                ctx.fillText('F', 420 - (measure.width / 2), 650);
-                ctx.strokeText('F', 420 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('G');
-                ctx.fillText('G', 510 - (measure.width / 2), 650);
-                ctx.strokeText('G', 510 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('H');
-                ctx.fillText('H', 600 - (measure.width / 2), 650);
-                ctx.strokeText('H', 600 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('J');
-                ctx.fillText('J', 690 - (measure.width / 2), 650);
-                ctx.strokeText('J', 690 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('K');
-                ctx.fillText('K', 780 - (measure.width / 2), 650);
-                ctx.strokeText('K', 780 - (measure.width / 2), 650);
-
-                measure = ctx.measureText('L');
-                ctx.fillText('L', 870 - (measure.width / 2), 650);
-                ctx.strokeText('L', 870 - (measure.width / 2), 650);
-
-                measure = ctx.measureText(';');
-                ctx.fillText(';', 960 - (measure.width / 2), 650);
-                ctx.strokeText(';', 960 - (measure.width / 2), 650);
-                
-                measure = ctx.measureText(',');
-                ctx.fillText(',', 1050 - (measure.width / 2), 650);
-                ctx.strokeText(',', 1050 - (measure.width / 2), 650);
-                
-                ctx.fillStyle = 'white';
-                ctx.font = '54px Tangerine';
-                measure = ctx.measureText('Y');
-                ctx.fillText('Y', 552 - (measure.width / 2), 250);
-                ctx.strokeText('Y', 552 - (measure.width / 2), 250);
-
-                ctx.font = '60px Tangerine';
-                measure = ctx.measureText('W');
-                ctx.fillText('W', 187 - (measure.width / 2), 250);
-                ctx.strokeText('W', 187 - (measure.width / 2), 250);
-                
-                measure = ctx.measureText('E');
-                ctx.fillText('E', 292 - (measure.width / 2), 250);
-                ctx.strokeText('E', 292 - (measure.width / 2), 250);
-                
-                measure = ctx.measureText('T');
-                ctx.fillText('T', 452 - (measure.width / 2), 250);
-                ctx.strokeText('T', 452 - (measure.width / 2), 250);
-
-                measure = ctx.measureText('U');
-                ctx.fillText('U', 652 - (measure.width / 2), 250);
-                ctx.strokeText('U', 652 - (measure.width / 2), 250);
-
-                measure = ctx.measureText('O');
-                ctx.fillText('O', 817 - (measure.width / 2), 250);
-                ctx.strokeText('O', 817 - (measure.width / 2), 250);
-
-                measure = ctx.measureText('P');
-                ctx.fillText('P', 922 - (measure.width / 2), 250);
-                ctx.strokeText('P', 922 - (measure.width / 2), 250);
             }
-            function drawKeys(ctx) {
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                // Bottom C
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(105, 150);
-                ctx.lineTo(105, 750);
-                ctx.lineTo(195, 750);
-                ctx.lineTo(195, 450);
-                ctx.lineTo(150, 450);
-                ctx.lineTo(150, 150);
-                ctx.lineTo(105, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'bottomC') {
-                    ctx.fillStyle = '#b22937';
-                }
-                ctx.stroke();
-                ctx.fill();
+            ctx.fillRect(150, 150, 75, 300);
 
-                // Lower D
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(225, 150);
-                ctx.lineTo(255, 150);
-                ctx.lineTo(255, 450);
-                ctx.lineTo(285, 450);
-                ctx.lineTo(285, 750);
-                ctx.lineTo(195, 750);
-                ctx.lineTo(195, 450);
-                ctx.lineTo(225, 450);
-                ctx.lineTo(225, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'D') {
-                    ctx.fillStyle = '#de5003';
-                }
-                ctx.stroke();
-                ctx.fill();
-                
-                // Lower E
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(330, 150);
-                ctx.lineTo(375, 150);
-                ctx.lineTo(375, 750);
-                ctx.lineTo(285, 750);
-                ctx.lineTo(285, 450);
-                ctx.lineTo(330, 450);
-                ctx.lineTo(330, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'E') {
-                    ctx.fillStyle = '#efce10';
-                }
-                ctx.stroke();
-                ctx.fill();
-
-                // Lower F
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(375, 150);
-                ctx.lineTo(375, 750);
-                ctx.lineTo(465, 750);
-                ctx.lineTo(465, 450);
-                ctx.lineTo(420, 450);
-                ctx.lineTo(420, 150);
-                ctx.lineTo(375, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'F') {
-                    ctx.fillStyle = '#acd62a';
-                }
-                ctx.stroke();
-                ctx.fill();
-                // G
-
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(495, 150);
-                ctx.lineTo(525, 150);
-                ctx.lineTo(525, 450);
-                ctx.lineTo(555, 450);
-                ctx.lineTo(555, 750);
-                ctx.lineTo(465, 750);
-                ctx.lineTo(465, 450);
-                ctx.lineTo(495, 450);
-                ctx.lineTo(495, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'G') {
-                    ctx.fillStyle = '#228b22';
-                }
-                ctx.stroke();
-                ctx.fill();
-
-                // A
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(585, 150);
-                ctx.lineTo(615, 150);
-                ctx.lineTo(615, 450);
-                ctx.lineTo(645, 450);
-                ctx.lineTo(645, 750);
-                ctx.lineTo(555, 750);
-                ctx.lineTo(555, 450);
-                ctx.lineTo(585, 450);
-                ctx.lineTo(585, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'A') {
-                    ctx.fillStyle = '#93bde7';
-                }
-                ctx.stroke();
-                ctx.fill();
-
-                // B
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(690, 150);
-                ctx.lineTo(735, 150);
-                ctx.lineTo(735, 750);
-                ctx.lineTo(645, 750);
-                ctx.lineTo(645, 450);
-                ctx.lineTo(690, 450);
-                ctx.lineTo(690, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'B') {
-                    ctx.fillStyle = '#575597';
-                }
-                ctx.stroke();
-                ctx.fill();
-
-                // Top C
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(735, 150);
-                ctx.lineTo(735, 750);
-                ctx.lineTo(825, 750);
-                ctx.lineTo(825, 450);
-                ctx.lineTo(780, 450);
-                ctx.lineTo(780, 150);
-                ctx.lineTo(735, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'topC') {
-                    ctx.fillStyle = '#1f1d6d';
-                }
-                ctx.stroke();
-                ctx.fill();
-
-                // Upper D
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(855, 150);
-                ctx.lineTo(885, 150);
-                ctx.lineTo(885, 450);
-                ctx.lineTo(915, 450);
-                ctx.lineTo(915, 750);
-                ctx.lineTo(825, 750);
-                ctx.lineTo(825, 450);
-                ctx.lineTo(855, 450);
-                ctx.moveTo(855, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'upperD') {
-                    ctx.fillStyle = '#a670b8';
-                }
-                ctx.stroke();
-                ctx.fill();
-
-                // Upper E
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.moveTo(960, 150);
-                ctx.lineTo(1005, 150);
-                ctx.lineTo(1005, 750);
-                ctx.lineTo(915, 750);
-                ctx.lineTo(915, 450);
-                ctx.lineTo(960, 450);
-                ctx.lineTo(960, 150);
-                ctx.closePath();
-                if (currentNote && currentNote === 'upperE') {
-                    ctx.fillStyle = '#a650a0';
-                }
-                ctx.stroke();
-                ctx.fill();
-
-                // Upper F
-                if (currentNote && currentNote === 'upperF') {
-                    ctx.fillStyle = '#a2395b';
-                } else {
-                    ctx.fillStyle = 'white';
-                }
-                ctx.fillRect(1005, 150, 90, 600);
-                ctx.strokeRect(1005, 150, 90, 600);
-
-                // Lower C#/D flat
-                if (currentNote && currentNote === 'dFlat') {
-                    ctx.fillStyle = '#c11c17';
-                } else {
-                    ctx.fillStyle = 'black';
-                }
-                ctx.fillRect(150, 150, 75, 300);
-
-                // Lower D#/E flat
-                if (currentNote && currentNote === 'eFlat') {
-                    ctx.fillStyle = '#e27a1d';
-                } else {
-                    ctx.fillStyle = 'black';
-                }
-                ctx.fillRect(255, 150, 75, 300);
-                // F#/G flat
-                if (currentNote && currentNote === 'gFlat') {
-                    ctx.fillStyle = '#4ca82b';
-                } else {
-                    ctx.fillStyle = 'black';
-                }
-                ctx.fillRect(420, 150, 75, 300);
-                // G#/A flat
-                if (currentNote && currentNote === 'aFlat') {
-                    ctx.fillStyle = '#20b2aa';
-                } else {
-                    ctx.fillStyle = 'black';
-                };
-                ctx.fillRect(525, 150, 60, 300);
-                // A#/B Flat
-                if (currentNote && currentNote === 'bFlat') {
-                    ctx.fillStyle = '#6f6da7';
-                } else {
-                    ctx.fillStyle = 'black';
-                }
-                ctx.fillRect(615, 150, 75, 300);
-                // Upper C#/D flat
-                if (currentNote && currentNote === 'upperDflat') {
-                    ctx.fillStyle = '#502e72';
-                } else {
-                    ctx.fillStyle = 'black';
-                }
-                ctx.fillRect(780, 150, 75, 300);
-                // Upper D#/E flat
-                if (currentNote && currentNote === 'upperEflat') {
-                    ctx.fillStyle = '#a63570';
-                } else {
-                    ctx.fillStyle = 'black';
-                }
-                ctx.fillRect(885, 150, 75, 300);
+            // Lower D#/E flat
+            if (currentNote && currentNote === 'eFlat') {
+                ctx.fillStyle = '#e27a1d';
+            } else {
+                ctx.fillStyle = 'black';
             }
+            ctx.fillRect(255, 150, 75, 300);
+
+            // F#/G flat
+            if (currentNote && currentNote === 'gFlat') {
+                ctx.fillStyle = '#4ca82b';
+            } else {
+                ctx.fillStyle = 'black';
+            }
+            ctx.fillRect(420, 150, 75, 300);
+
+            // G#/A flat
+            if (currentNote && currentNote === 'aFlat') {
+                ctx.fillStyle = '#20b2aa';
+            } else {
+                ctx.fillStyle = 'black';
+            };
+            ctx.fillRect(525, 150, 60, 300);
+
+            // A#/B Flat
+            if (currentNote && currentNote === 'bFlat') {
+                ctx.fillStyle = '#6f6da7';
+            } else {
+                ctx.fillStyle = 'black';
+            }
+            ctx.fillRect(615, 150, 75, 300);
+
+            // Upper C#/D flat
+            if (currentNote && currentNote === 'upperDflat') {
+                ctx.fillStyle = '#502e72';
+            } else {
+                ctx.fillStyle = 'black';
+            }
+            ctx.fillRect(780, 150, 75, 300);
+
+            // Upper D#/E flat
+            if (currentNote && currentNote === 'upperEflat') {
+                ctx.fillStyle = '#a63570';
+            } else {
+                ctx.fillStyle = 'black';
+            }
+            ctx.fillRect(885, 150, 75, 300);
+        }
+
         // define the start screen
         startScreen = (function (input) {
 
@@ -1134,7 +1142,6 @@
                     startScreen = countdownScreen;
                 }
             }
-
             return {
                 draw: draw,
                 update: update
