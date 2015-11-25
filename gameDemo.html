@@ -33,10 +33,13 @@
         var countdownScreen;
         var guessScreen;
         var numPlayers;
+        var correctNotes = 0;
+        var incorrectNotes = 0;
+        var extraNotes = 0;
         var currentPlayer = 0;
         var players = [{idNum: 1, score: 0}];
         var currentSong;
-        var improvRecord = '';
+        var improvRecord;
         var songs = [];
         var currentNote = null;
         var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '6868707171706883'], twinkleStar: ['65657171727271', '70706868838365', '71717070686883']};
@@ -560,6 +563,7 @@
                     } else if (button == buttons[2]) {
                         canvas.removeEventListener('click', _func);
                         improvRound = 1;
+                        improvRecord = "";
                         startScreen = countdownScreen;
                     }
                 }, false);
@@ -639,8 +643,8 @@
                 ctx.font = '86px Tangerine';
                 centerText(ctx, 'Please choose the number of teams in this game below', 350);
 
-                ctx.fillStyle = '#ffffff';
                 for (var i = 0; i < buttons.length; i++) {
+                    ctx.fillStyle = 'black';
                     ctx.fillRect(buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h);
                     numberButton(ctx, i + 1, buttons[i]);                
                 }
@@ -649,7 +653,7 @@
             function numberButton(ctx, text, button) {
                 ctx.font = '150px monospace';
                 ctx.strokeStyle = 'black';
-                ctx.fillStyle = -'#ffffff';
+                ctx.fillStyle = '#ffffff';
                 var measurement = ctx.measureText(text);
                 var x = 80 + button.x;
                 ctx.fillText(text, x, 650);
@@ -1227,12 +1231,8 @@
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
                         currentNote = sounds[e.keyCode];
+                        noteString = noteString.concat(e.keyCode);
                         drawKeys(ctx);
-                        if (improvRound === 1) {
-                            improvRecord = improvRecord.concat(e.keyCode);
-                        } else {
-                            noteString = noteString.concat(e.keyCode);
-                        }
                     }
                 }
                 document.onkeyup = function (e) {
@@ -1244,8 +1244,11 @@
             }
 
             function endRecording() {
+                var improvSeg;
+                var recordSeg;
                 if (improvRound === 1) {
                     recordLength = 0;
+                    improvRecord = noteString;
                     noteString = '';
                     improvRound++;
                     document.onkeydown = null;
@@ -1253,10 +1256,26 @@
                     startScreen = countdownScreen;
                 } else {
                     recordLength = 0;
-                    improvRecord = '';
+                    for (var i = 0; i < noteString.length / 2; i++) {
+                        if (2 * i + 1 < improvRecord.length) {
+                            var j = i;
+                            improvSeg = improvRecord.substring(2 * i, 2 * i + 2);
+                            recordSeg = noteString.substring(2 * j, 2 * j + 2);
+                            if (improvSeg === recordSeg) {
+                                players[0].score += 50;
+                                correctNotes++;
+                            } else {
+                                players[0].score -= 50;
+                                incorrectNotes++;
+                            }
+                        } else {
+                            players[0].score -= 10;
+                            extraNotes++;
+                        }
+                    }
                     document.onkeydown = null;
-                    document.onkeyup;
-                    startScreen = mainScreen;
+                    document.onkeyup = null;
+                    startScreen = improvResultsScreen;
                 }
             }
             return {
@@ -1265,6 +1284,79 @@
             };
         }(mouseClick));
 
+        improvResultsScreen = (function (input) {
+            var firstTime = true;
+            var buttons = [{x: 850, y: 725, w: 250, h: 100}];
+            var measure;
+
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                if (firstTime) {
+                    firstTime = false;
+                    ctx.globalAlpha = 0;
+                } else {
+                    ctx.globalAlpha += 0.05;
+                }
+                ctx.font = '144px Tangerine'
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                centerText(ctx, 'Results', 150);
+
+                ctx.font = "72px Tangerine";
+                ctx.fillText('Correct Notes: ' + correctNotes, ctx.canvas.width / 2 - 425, 300);
+                ctx.strokeText('Correct Notes: ' + correctNotes, ctx.canvas.width / 2 - 425, 300);
+
+                ctx.fillText('x 50 = ' + correctNotes * 50, ctx.canvas.width / 2 + 100, 300);
+                ctx.strokeText('x 50 = ' + correctNotes * 50, ctx.canvas.width / 2 + 100, 300);
+
+                ctx.fillText('Incorrect Notes: ' + incorrectNotes, ctx.canvas.width / 2 - 425, 400);
+                ctx.strokeText('Incorrect Notes: ' + incorrectNotes, ctx.canvas.width / 2 - 425, 400);
+
+                ctx.fillText('x -50 = -' + incorrectNotes * 50, ctx.canvas.width / 2 + 100, 400);
+                ctx.strokeText('x -50 = -' + incorrectNotes * 50, ctx.canvas.width / 2 + 100, 400);
+
+                ctx.fillText('Extra Notes: ' + extraNotes, ctx.canvas.width / 2 - 425, 500);
+                ctx.strokeText('Extra Notes: ' + extraNotes, ctx.canvas.width / 2 - 425, 500);
+
+                ctx.fillText('x -10 = -' + extraNotes * 10, ctx.canvas.width / 2 + 100, 500);
+                ctx.strokeText('x -10 = -' + extraNotes * 10, ctx.canvas.width / 2 + 100, 500);
+
+                ctx.fillText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + players[0].score, ctx.canvas.width / 2 + 100, 625);
+                ctx.strokeText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + players[0].score, ctx.canvas.width / 2 + 100, 625);
+
+                ctx.font = '84px Tangerine';
+
+                ctx.fillText('Total Score: ' + players[0].score, ctx.canvas.width / 2 - 425, 625);
+                ctx.strokeText('Total Score: ' + players[0].score, ctx.canvas.width / 2 - 425, 625);
+
+                ctx.fillStyle = 'black';
+                for (var i = 0; i < buttons.length; i++) {
+                    ctx.fillRect(buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h);
+                }
+
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'black';
+                ctx.font = '52px Tangerine';
+                measure = ctx.measureText('Return to menu');
+                ctx.fillText('Return to menu', 975 - measure.width / 2, 800);
+                ctx.strokeText('Return to menu', 975 - measure.width / 2, 800);
+            }
+
+            function update() {
+                canvas.addEventListener('click', function _func(e) {
+                    var button = buttonCollision(buttons, e.offsetX, e.offsetY);
+                    if (button !== null) {
+                        canvas.removeEventListener('click', _func);
+                        players[0].score = 0;
+                        startScreen = mainScreen;
+                    }
+                }, false);
+            }
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
         beginLoop();
     </script>
 </body>
