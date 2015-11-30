@@ -20,7 +20,7 @@
     <canvas id="board"></canvas>
     <script>
         var canvas;
-        var surface
+        var surface;
         var startScreen;
         var trainingScreen;
         var improvScreen;
@@ -29,10 +29,12 @@
         var gameScreen;
         var mainScreen;
         var continueScreen;
+        var infoScreen;
         var listenScreen;
         var countdownScreen;
         var guessScreen;
         var creationScreen;
+        var nextScreen;
         var numPlayers;
         var correctNotes = 0;
         var incorrectNotes = 0;
@@ -55,7 +57,7 @@
             // NOTE: hotlineBling requires top two notes.
             hotlineBling: ['767675222186767518675', '22218676751867572', '75757272757576'],
             takeOnMe: ['717169656570707072728575', '858585708371717170707170', '717169656570707072728575'],
-            numberOftheBeast: ['8383838483718372838372838372838372838372', '8383838483718372838372838372838372839272',
+            numberOftheBeast: ['8383838483718372838372838372838372838372', '8383838483718372838372838372838372837272',
                 '6565656865706571656571656571656571656571'],
             mario: ['68686865687171', '75716872747289', '656871727071686583'],
             marriageofFigaro: ['877089797585', '8979758589797585', '8984706987'],
@@ -95,6 +97,10 @@
         var guess = '';
         var title = 'What\'s that song?';
         var improvRound = 0;
+        var chosen = [];
+        for (var i = 0; i < 18; i++) {
+            chosen[i] = false;
+        }
 
         function beginLoop() {
             var frameId = 0;
@@ -538,6 +544,112 @@
                 update: update
             };
         }(mouseClick));
+        
+        infoScreen = (function (input) {
+            var wasButtonDown = false;
+
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#78ff87';
+                ctx.font = '120px Tangerine';
+
+                if (nextScreen) {
+                    if (nextScreen === trainingScreen) {
+                        centerText(ctx, 'Training Screen', 200);
+
+                        ctx.font = '100px Tangerine';
+                        centerText(ctx, 'click to begin', 725);
+
+                        ctx.font = '76px Tangerine';
+                        ctx.fillStyle = 'black';
+                        centerText(ctx, 'Press the keys on your keyboard that correspond to', 350);
+                        centerText(ctx, 'the letters on the piano. When you are finished,', 475);
+                        centerText(ctx, 'press the button at the bottom to return to the main screen.', 600);
+                    } else if (nextScreen === gameScreen) {
+                        centerText(ctx, 'Game Screen Rules', 200);
+
+                        ctx.font = '100px Tangerine';
+                        centerText(ctx, 'click to begin', 725);
+
+                        ctx.fillStyle = 'black';
+                        ctx.font = '80px Tangerine';
+                        centerText(ctx, 'When it is your team\'s turn, click on any of the', 350);
+                        centerText(ctx, 'song tiles in order to try and guess the song!', 475);
+                        centerText(ctx, 'More points are awarded for harder songs.', 600);
+                    } else if (nextScreen === improvScreen) {
+                        centerText(ctx, 'The Improv Game', 200);
+
+                        ctx.font = '100px Tangerine';
+                        centerText(ctx, 'click to begin', 770);
+
+                        ctx.font = '68px Tangerine';
+                        ctx.fillStyle = 'black';
+                        centerText(ctx, 'Player 1, after clicking on this screen, you will have 10 seconds', 350);
+                        centerText(ctx, 'to create your own improvisational song. After another countdown,', 450);
+                        centerText(ctx, 'Player 2 will have 10 seconds to replicate Player 1\'s song.', 550);
+                        centerText(ctx, 'Results will be shown immediately after player 2\'s attempt.', 650);
+                    } else if (nextScreen === creationScreen) {
+                        centerText(ctx, 'WORK IN PROGRESS', 200);
+                    } else if (nextScreen === countdownScreen) {
+                        centerText(ctx, 'How to Play', 200);
+
+                        ctx.font = '100px Tangerine';
+                        centerText(ctx, 'click to begin', 760);
+
+                        ctx.font = '76px Tangerine';
+                        ctx.fillStyle = 'black';
+                        if (improvRound === 1) {
+                            ctx.font = '60px Tangerine';
+                            centerText(ctx, 'Player 1, after clicking on this screen, you will have 10 seconds', 350);
+                            centerText(ctx, 'to create your own improvisational song. After another countdown,', 450);
+                            centerText(ctx, 'Player 2 will have 10 seconds to replicate Player 1\'s song.', 550);
+                            centerText(ctx, 'Results will be shown immediately after player 2\'s attempt.', 650);
+                        } else if (recordRound === 1) {
+                            centerText(ctx, 'Player 1, you now have 10 seconds to replicate', 350);
+                            centerText(ctx, 'the recording as best as you can. Every correct note will add', 475);
+                            centerText(ctx, 'points, any wrong or extra notes will subtract points.', 600);
+                        } else if (recordRound === 2) {
+                            centerText(ctx, 'Player 2, you now have 10 seconds to replicate', 350);
+                            centerText(ctx, 'the next portion of the recording. The same', 475);
+                            centerText(ctx, 'scoring rules apply here.', 600);
+                        } else if (recordRound === 3) {
+                            centerText(ctx, 'Player 2, you now have 10 seconds to add one', 350);
+                            centerText(ctx, 'more portion to the recording. The same', 475);
+                            centerText(ctx, 'scoring rules apply here. Go for broke!', 600);
+                        }
+                    } else if (nextScreen === guessScreen) {
+                        centerText(ctx, 'Guess Screen', 200);
+
+                        ctx.font = '100px Tangerine';
+                        centerText(ctx, 'click to begin', 725);
+
+                        ctx.font = '76px Tangerine';
+                        ctx.fillStyle = 'black';
+                        centerText(ctx, 'There will be 4 song titles on the next page.', 350);
+                        centerText(ctx, 'Observer, you must now attempt to guess which song title', 475);
+                        centerText(ctx, 'is the correct title. Correct guesses give 100 points!', 600);
+                    }
+                }
+            }
+
+            function update() {
+                var isButtonDown = input.isButtonDown();
+                var mouseJustClicked = !isButtonDown && wasButtonDown;
+
+                if (mouseJustClicked) {
+                    if (nextScreen) {
+                        startScreen = nextScreen;
+                    }
+                }
+
+                wasButtonDown = isButtonDown;
+            }
+
+            return {
+                draw: draw,
+                update: update
+            }
+        }(mouseClick));
 
         mainScreen = (function (input) {
             var buttons = [{x: 200, y: 550, w: 200, h: 150},
@@ -585,15 +697,19 @@
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
                     if (button == buttons[0]) {
                         canvas.removeEventListener('click', _func);
-                        startScreen = trainingScreen;
+                        nextScreen = trainingScreen;
+                        startScreen = infoScreen;
                     } else if (button == buttons[1]) {
                         canvas.removeEventListener('click', _func);
+                        improvRound = 0;
+                        creationRound = 0;
                         startScreen = settingScreen;
                     } else if (button == buttons[2]) {
                         canvas.removeEventListener('click', _func);
                         improvRound = 1;
                         improvRecord = "";
-                        startScreen = countdownScreen;
+                        nextScreen = countdownScreen;
+                        startScreen = infoScreen;
                     } else if (button == buttons[3]) {
                         canvas.removeEventListener('click', _func);
                         creationRound = 1;
@@ -701,20 +817,23 @@
                         transitioning = true;
                         numPlayers = 1;
                         canvas.removeEventListener('click', _func);
-                        startScreen = gameScreen;
+                        nextScreen = gameScreen;
+                        startScreen = infoScreen;
                     } else if (button == buttons[1]) {
                         transitioning = true;
                         players[1] = {idNum: 2, score: 0};
                         numPlayers = 2;
                         canvas.removeEventListener('click', _func);
-                        startScreen = gameScreen;
+                        nextScreen = gameScreen;
+                        startScreen = infoScreen;
                     } else if (button == buttons[2]) {
                         transitioning = true;
                         players[1] = {idNum: 2, score: 0};
                         players[2] = {idNum: 3, score: 0};
                         numPlayers = 3;
                         canvas.removeEventListener('click', _func);
-                        startScreen = gameScreen;
+                        nextScreen = gameScreen;
+                        startScreen = infoScreen;
                     }
                 }, false);
             }
@@ -757,19 +876,30 @@
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#78ff87';
                 ctx.strokeStyle = '#000000';
+                ctx.font = '120px Tangerine';
+                centerText(ctx, title, 100);
                 for (var i = 0; i < 4; i++) {
                     for (var j = 0; j < 6; j++) {
-                        var num = (i * 6) + j
-                        buttons[num] = {x: 150 + (j * 150), y: 140 + (i * 150), w: 150, h: 150};
+                        var num = (i * 6) + j;
+                        buttons[num] = {x: 150 + (j * 150), y: 140 + (i * 150), w: 150, h: 150, chosen: false};
+                        if (num - 6 >= 0) {
+                            if (chosen[num - 6]) {
+                                buttons[num].chosen = true;
+                            }
+                        }
                         songs[num] = {title: songTitles[num], x: 150 + (j * 150), y: 140 + (i * 150)};
                     }
                 }
+
                 for (var num = 0; num < 24; num++) {
+                    if (buttons[num].chosen) {
+                        ctx.fillStyle = 'red';
+                    } else {
+                        ctx.fillStyle = '#78ff87';
+                    }
                     ctx.fillRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
                     ctx.strokeRect(buttons[num].x, buttons[num].y, buttons[num].w, buttons[num].h);
                 }
-                ctx.font = '120px Tangerine';
-                centerText(ctx, title, 100);
 
                 ctx.fillStyle = '#ffffff';
                 labelGrid(ctx, 'Easy', 'Medium', 'Hard');
@@ -896,29 +1026,38 @@
                 if (button.x === 150) {
                     if (button.y === 290) {
                         song = songs[0].title;
+                        chosen[0] = true;
                     } else if (button.y === 440) {
                         song = songs[6].title;
+                        chosen[6] = true;
                     } else if (button.y === 590) {
                         song = songs[12].title;
+                        chosen[12] = true;
                     }
                 }
 
                 if (button.x === 300) {
                     if (button.y === 290) {
                         song = songs[1].title;
+                        chosen[1] = true;
                     } else if (button.y === 440) {
                         song = songs[7].title;
+                        chosen[7] = true;
                     } else if (button.y === 590) {
                         song = songs[13].title;
+                        chosen[13] = true;
                     }
                 }
 
                 if (button.x === 450) {
                     if (button.y === 290) {
                         song = songs[2].title;
+                        chosen[2] = true;
                     } else if (button.y === 440) {
+                        chosen[8] = true;
                         song = songs[8].title;
                     } else if (button.y === 590) {
+                        chosen[14] = true;
                         song = songs[14].title;
                     }
                 }
@@ -926,30 +1065,39 @@
                 if (button.x === 600) {
                     if (button.y === 290) {
                         song = songs[3].title;
+                        chosen[3] = true;
                     } else if (button.y === 440) {
                         song = songs[9].title;
+                        chosen[9] = true;
                     } else if (button.y === 590) {
                         song = songs[15].title;
+                        chosen[15] = true;
                     }
                 }
 
                 if (button.x === 750) {
                     if (button.y === 290) {
                         song = songs[4].title;
+                        chosen[4] = true;
                     } else if (button.y === 440) {
                         song = songs[10].title;
+                        chosen[10] = true;
                     } else if (button.y === 590) {
                         song = songs[16].title;
+                        chosen[16] = true;
                     }
                 }
 
                 if (button.x === 900) {
                     if (button.y === 290) {
                         song = songs[5].title;
+                        chosen[5] = true;
                     } else if (button.y === 440) {
                         song = songs[11].title;
+                        chosen[11] = true;
                     } else if (button.y === 590) {
                         song = songs[17].title;
+                        chosen[17] = true;
                     }
                 }
                 return song;
@@ -958,7 +1106,7 @@
             function update() {
                 canvas.addEventListener('click', function _func(e) {
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
-                    if (button !== null && button.y > 150) {
+                    if (button !== null && button.y > 150 && !button.chosen) {
                         transitioning = true;
                         currentTile = button;
                         currentSong = getSong(button);
@@ -1016,11 +1164,11 @@
                     transitioning = true;
                     count = 0;
                     next = false;
-
                     if (improvRound === 1 || improvRound === 2) {
                         startScreen = improvScreen;
                     } else if (creationRound === 1) {
-                        startScreen = creationScreen;
+                        nextScreen = creationScreen;
+                        startScreen = infoScreen;
                     } else if (recordRound === 0) {
                         startScreen = listenScreen;
                     } else {
@@ -1068,7 +1216,8 @@
                     } else if (button == buttons[1]) {
                         recordRound = 1;
                         canvas.removeEventListener('click', _func);
-                        startScreen = countdownScreen;
+                        nextScreen = countdownScreen;
+                        startScreen = infoScreen;
                     }
                 }, false);
             }
@@ -1284,14 +1433,16 @@
                     noteString = '';
                     document.onkeydown = null;
                     document.onkeyup = null;
-                    startScreen = guessScreen;  
+                    nextScreen = guessScreen;
+                    startScreen = infoScreen;  
                 } else {
                     recordLength = 0;
                     noteString = '';
                     recordRound++;
                     document.onkeydown = null;
                     document.onkeyup = null;
-                    startScreen = countdownScreen;
+                    nextScreen = countdownScreen;
+                    startScreen = infoScreen;
                 }
             }
             return {
@@ -1363,6 +1514,8 @@
                     }
                     document.onkeydown = null;
                     document.onkeyup = null;
+                    improvRecord = null;
+                    noteString = '';
                     startScreen = improvResultsScreen;
                 }
             }
