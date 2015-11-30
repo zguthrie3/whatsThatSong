@@ -42,10 +42,33 @@
         var improvRecord;
         var songs = [];
         var currentNote = null;
-        var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '6868707171706883'], twinkleStar: ['65657171727271', '70706868838365', '71717070686883']};
-        var songTitles = ['odeToJoy', 'twinkleStar', 'shutUpandDance', 'callMeMaybe', 'smokeOnWater', 'mario',
-            '1812', 'oldMcDonald', 'hotlineBling', 'takeOnMe', 'highwayStar', 'tetris',
-            'valkyries', 'popGoesWeasel', 'animals', 'wannabe', 'sweetChild', 'clockTown'];         
+        var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '6868707171706883'],
+            twinkleStar: ['65657171727271', '70706868838365', '71717070686883'],
+            // NOTE: sugar requires top two notes.
+            sugar: ['79857985', '6970186808079798079', '79857985'],
+            callMeMaybe: ['8965698969', '6965697589', '8975797589'],
+            notGonnaTakeIt: ['707065707165', '72707171728570', '727271707172707070'],
+            clockTown: ['83767974727471', '727168727168717284', '83767974727471'],
+            1812: ['83717274727172747171', '83717274727172747171', '687274726865687268656872'],
+            frereJacques: ['6583686565836865', '687071687071', '717271706865717271706865'],
+            // NOTE: hotlineBling requires top two notes.
+            hotlineBling: ['767675222186767518675', '22218676751867572', '75757272757576'],
+            takeOnMe: ['717169656570707072728575', '858585708371717170707170', '717169656570707072728575'],
+            numberOftheBeast: ['8383838483718372838372838372838372838372', '8383838483718372838372838372838372839272',
+                '6565656865706571656571656571656571656571'],
+            mario: ['68686865687171', '75716872747289', '656871727071686583'],
+            marriageofFigaro: ['877089797585', '8979758589797585', '8984706987'],
+            popGoesWeasel: ['6565838368716865', '656583706865', '6565838368716865'],
+            shutUpandDance: ['7070757572717070', '7084707071727071', '7070757276757572717070'],
+            wannabe: ['7171717171727168', '65836583836568', '717171727168'],
+            thunderstruck: ['6865716568657165686571656865716568657165686571656865716568657165',
+                '7065896570658965706589657065896570658965706589657065896570658965',
+                '7565746572657465726571657265706571656865706568657065686570656865'],
+            tetris: ['718369706983656569717069', '83697071696565', '70897585897169717069']
+        };
+        var songTitles = ['odeToJoy', 'twinkleStar', 'sugar', 'callMeMaybe', 'notGonnaTakeIt', 'clockTown',
+            '1812', 'frereJacques', 'hotlineBling', 'takeOnMe', 'numberOftheBeast', 'mario',
+            'marriageofFigaro', 'popGoesWeasel', 'shutUpandDance', 'wannabe', 'thunderstruck', 'tetris'];         
         var sounds = {
             65: 'bottomC',
             87: 'dFlat',
@@ -862,15 +885,65 @@
                 if (button.x === 150) {
                     if (button.y === 290) {
                         song = songs[0].title;
+                    } else if (button.y === 440) {
+                        song = songs[6].title;
+                    } else if (button.y === 590) {
+                        song = songs[12].title;
                     }
                 }
+
                 if (button.x === 300) {
                     if (button.y === 290) {
                         song = songs[1].title;
+                    } else if (button.y === 440) {
+                        song = songs[7].title;
+                    } else if (button.y === 590) {
+                        song = songs[13].title;
+                    }
+                }
+
+                if (button.x === 450) {
+                    if (button.y === 290) {
+                        song = songs[2].title;
+                    } else if (button.y === 440) {
+                        song = songs[8].title;
+                    } else if (button.y === 590) {
+                        song = songs[14].title;
+                    }
+                }
+
+                if (button.x === 600) {
+                    if (button.y === 290) {
+                        song = songs[3].title;
+                    } else if (button.y === 440) {
+                        song = songs[9].title;
+                    } else if (button.y === 590) {
+                        song = songs[15].title;
+                    }
+                }
+
+                if (button.x === 750) {
+                    if (button.y === 290) {
+                        song = songs[4].title;
+                    } else if (button.y === 440) {
+                        song = songs[10].title;
+                    } else if (button.y === 590) {
+                        song = songs[16].title;
+                    }
+                }
+
+                if (button.x === 900) {
+                    if (button.y === 290) {
+                        song = songs[5].title;
+                    } else if (button.y === 440) {
+                        song = songs[11].title;
+                    } else if (button.y === 590) {
+                        song = songs[17].title;
                     }
                 }
                 return song;
             }
+
             function update() {
                 canvas.addEventListener('click', function _func(e) {
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
@@ -1338,8 +1411,8 @@
                 ctx.strokeStyle = 'black';
                 ctx.font = '52px Tangerine';
                 measure = ctx.measureText('Return to menu');
-                ctx.fillText('Return to menu', 975 - measure.width / 2, 800);
-                ctx.strokeText('Return to menu', 975 - measure.width / 2, 800);
+                ctx.fillText('Return to menu', 975 - measure.width / 2, 780);
+                ctx.strokeText('Return to menu', 975 - measure.width / 2, 780);
             }
 
             function update() {
