@@ -32,6 +32,7 @@
         var listenScreen;
         var countdownScreen;
         var guessScreen;
+        var creationScreen;
         var numPlayers;
         var correctNotes = 0;
         var incorrectNotes = 0;
@@ -541,7 +542,8 @@
         mainScreen = (function (input) {
             var buttons = [{x: 200, y: 550, w: 200, h: 150},
                 {x: 500, y: 550, w: 200, h: 150},
-                {x: 800, y: 550, w: 200, h: 150}];
+                {x: 800, y: 550, w: 200, h: 150},
+                {x: 200, y: 775, w: 800, h: 100}];
 
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -572,6 +574,10 @@
                 measurement = ctx.measureText('Improv Game');
                 ctx.fillText('Improv Game', 900 - measurement.width / 2, 625);
                 ctx.strokeText('Improv Game', 900 - measurement.width / 2, 625);
+
+                ctx.font = '96px Tangerine';
+                measurement = ctx.measureText('Create your own song');
+                centerText(ctx, 'Create your own song', 845);
             }
 
             function update() {
@@ -587,6 +593,11 @@
                         canvas.removeEventListener('click', _func);
                         improvRound = 1;
                         improvRecord = "";
+                        startScreen = countdownScreen;
+                    } else if (button == buttons[3]) {
+                        canvas.removeEventListener('click', _func);
+                        creationRound = 1;
+                        creationRecord = "";
                         startScreen = countdownScreen;
                     }
                 }, false);
@@ -987,6 +998,8 @@
                         centerText(ctx, 'Improv!', 600);
                     } else if (improvRound === 2) {
                         centerText(ctx, 'Replicate!', 600);
+                    } else if (creationRound === 1) {
+                        centerText(ctx, 'Create!', 600);
                     } else if (recordRound === 0) {
                         centerText(ctx, 'Listen!', 600);
                     } else {
@@ -1006,6 +1019,8 @@
 
                     if (improvRound === 1 || improvRound === 2) {
                         startScreen = improvScreen;
+                    } else if (creationRound === 1) {
+                        startScreen = creationScreen;
                     } else if (recordRound === 0) {
                         startScreen = listenScreen;
                     } else {
@@ -1430,6 +1445,43 @@
                 update: update
             };
         }(mouseClick));
+
+        creationScreen = (function (input) {
+            var noteString = '';
+            var recordLength = 0;
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = 'white';
+                drawKeys(ctx);
+                labelKeys(ctx);
+                recordLength++;
+            }
+
+            function update() {
+                document.onkeydown = function (e) {
+                    var soundId = sounds[e.keyCode];
+                    if (soundId) {
+                        var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
+                        sound.play();
+                        currentNote = sounds[e.keyCode];
+                        noteString = noteString.concat(e.keyCode);
+                        drawKeys(ctx);
+                    }
+                }
+                document.onkeyup = function (e) {
+                    currentNote = null;
+                }
+                if (recordLength === (500 || 1000)) {
+                    endRecording();
+                }
+            }
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
+
         beginLoop();
     </script>
 </body>
