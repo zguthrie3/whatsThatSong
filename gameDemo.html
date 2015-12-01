@@ -45,25 +45,25 @@
         var improvRecord;
         var songs = [];
         var currentNote = null;
-        var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '6868707171706883'],
+        var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '838368658368706865'],
             twinkleStar: ['65657171727271', '70706868838365', '71717070686883'],
             // NOTE: sugar requires top two notes.
-            sugar: ['79857985', '6970186808079798079', '79857985'],
+            sugar: ['79857985', '6970186808079798079', '7068878787697069878787'],
             callMeMaybe: ['8965698969', '6965697589', '8975797589'],
             notGonnaTakeIt: ['707065707165', '72707171728570', '727271707172707070'],
-            clockTown: ['83767974727471', '727168727168717284', '83767974727471'],
+            clockTown: ['83767974727471', '727168727168717284', '83838387836872'],
             1812: ['83717274727172747171', '83717274727172747171', '687274726865687268656872'],
             frereJacques: ['6583686565836865', '687071687071', '717271706865717271706865'],
             // NOTE: hotlineBling requires top two notes.
             hotlineBling: ['767675222186767518675', '22218676751867572', '75757272757576'],
-            takeOnMe: ['717169656570707072728575', '858585708371717170707170', '717169656570707072728575'],
+            takeOnMe: ['717169656570707072728575', '858585708371717170707170', '69698365'],
             numberOftheBeast: ['8383838483718372838372838372838372838372', '8383838483718372838372838372838372837272',
                 '6565656865706571656571656571656571656571'],
             mario: ['68686865687171', '75716872747289', '656871727071686583'],
             marriageofFigaro: ['877089797585', '8979758589797585', '8984706987'],
-            popGoesWeasel: ['6565838368716865', '656583706865', '6565838368716865'],
+            popGoesWeasel: ['6565838368716865', '656583706865', '7283706865'],
             shutUpandDance: ['7070757572717070', '7084707071727071', '7070757276757572717070'],
-            wannabe: ['7171717171727168', '65836583836568', '717171727168'],
+            wannabe: ['7171717171727168', '65836583836568', '757574717271'],
             thunderstruck: ['6865716568657165686571656865716568657165686571656865716568657165',
                 '7065896570658965706589657065896570658965706589657065896570658965',
                 '7565746572657465726571657265706571656865706568657065686570656865'],
@@ -606,11 +606,12 @@
                         } else if (recordRound === 1) {
                             centerText(ctx, 'Player 1, you now have 10 seconds to replicate', 350);
                             centerText(ctx, 'the recording as best as you can. Every correct note will add', 475);
-                            centerText(ctx, 'points, any wrong or extra notes will subtract points.', 600);
+                            centerText(ctx, 'points, any wrong or extra notes will subtract points. Good luck!', 600);
                         } else if (recordRound === 2) {
                             centerText(ctx, 'Player 2, you now have 10 seconds to replicate', 350);
-                            centerText(ctx, 'the next portion of the recording. The same', 475);
-                            centerText(ctx, 'scoring rules apply here.', 600);
+                            centerText(ctx, 'the next portion of the recording. The same', 450);
+                            centerText(ctx, 'scoring rules apply here. This section may be identical', 550);
+                            centerText(ctx, 'to the first section added by Player 1. Good luck!', 650);
                         } else if (recordRound === 3) {
                             centerText(ctx, 'Player 1, you now have 10 seconds to add one', 350);
                             centerText(ctx, 'more portion to the song. Note that it will', 450);
