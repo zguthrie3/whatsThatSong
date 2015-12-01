@@ -27,6 +27,7 @@
         var improvResultsScreen;
         var settingScreen;
         var gameScreen;
+        var pianoScreen;
         var mainScreen;
         var continueScreen;
         var infoScreen;
@@ -34,6 +35,7 @@
         var countdownScreen;
         var guessScreen;
         var creationScreen;
+        var recordResultsScreen;
         var nextScreen;
         var numPlayers;
         var correctNotes = 0;
@@ -1485,8 +1487,7 @@
                     j = 0;
                     document.onkeydown = null;
                     document.onkeyup = null;
-                    nextScreen = guessScreen;
-                    startScreen = infoScreen;  
+                    startScreen = recordResultsScreen; 
                 } else {
                     recordLength = 0;
                     recordCount = 0;
@@ -1499,6 +1500,83 @@
                     nextScreen = countdownScreen;
                     startScreen = infoScreen;
                 }
+            }
+            return {
+                draw: draw,
+                update: update
+            };
+        }(mouseClick));
+
+        recordResultsScreen = (function (input) {
+            var firstTime = true;
+            var buttons = [{x: 850, y: 725, w: 250, h: 100}];
+            var measure;
+
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                if (firstTime) {
+                    firstTime = false;
+                    ctx.globalAlpha = 0;
+                } else {
+                    ctx.globalAlpha += 0.05;
+                }
+                ctx.font = '144px Tangerine'
+                ctx.fillStyle = '#78ff87';
+                ctx.strokeStyle = 'black';
+                centerText(ctx, 'Results', 150);
+
+                ctx.font = "72px Tangerine";
+                ctx.fillText('Correct Notes: ' + correctNotes, ctx.canvas.width / 2 - 425, 300);
+                ctx.strokeText('Correct Notes: ' + correctNotes, ctx.canvas.width / 2 - 425, 300);
+
+                ctx.fillText('x 50 = ' + correctNotes * 50, ctx.canvas.width / 2 + 100, 300);
+                ctx.strokeText('x 50 = ' + correctNotes * 50, ctx.canvas.width / 2 + 100, 300);
+
+                ctx.fillText('Incorrect Notes: ' + incorrectNotes, ctx.canvas.width / 2 - 425, 400);
+                ctx.strokeText('Incorrect Notes: ' + incorrectNotes, ctx.canvas.width / 2 - 425, 400);
+
+                ctx.fillText('x -50 = -' + incorrectNotes * 50, ctx.canvas.width / 2 + 100, 400);
+                ctx.strokeText('x -50 = -' + incorrectNotes * 50, ctx.canvas.width / 2 + 100, 400);
+
+                ctx.fillText('Extra Notes: ' + extraNotes, ctx.canvas.width / 2 - 425, 500);
+                ctx.strokeText('Extra Notes: ' + extraNotes, ctx.canvas.width / 2 - 425, 500);
+
+                ctx.fillText('x -10 = -' + extraNotes * 10, ctx.canvas.width / 2 + 100, 500);
+                ctx.strokeText('x -10 = -' + extraNotes * 10, ctx.canvas.width / 2 + 100, 500);
+
+                ctx.fillText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + players[0].score, ctx.canvas.width / 2 + 100, 625);
+                ctx.strokeText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + players[0].score, ctx.canvas.width / 2 + 100, 625);
+
+                ctx.font = '84px Tangerine';
+
+                ctx.fillText('Total Score: ' + players[0].score, ctx.canvas.width / 2 - 425, 625);
+                ctx.strokeText('Total Score: ' + players[0].score, ctx.canvas.width / 2 - 425, 625);
+
+                ctx.fillStyle = 'black';
+                for (var i = 0; i < buttons.length; i++) {
+                    ctx.fillRect(buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h);
+                }
+
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'black';
+                ctx.font = '52px Tangerine';
+                measure = ctx.measureText('Return to menu');
+                ctx.fillText('Return to menu', 975 - measure.width / 2, 780);
+                ctx.strokeText('Return to menu', 975 - measure.width / 2, 780);
+            }
+
+            function update() {
+                canvas.addEventListener('click', function _func(e) {
+                    var button = buttonCollision(buttons, e.offsetX, e.offsetY);
+                    if (button !== null) {
+                        canvas.removeEventListener('click', _func);
+                        correctNotes = 0;
+                        incorrectNotes = 0;
+                        extraNotes = 0;
+                        nextScreen = guessScreen;
+                        startScreen = infoScreen;
+                    }
+                }, false);
             }
             return {
                 draw: draw,
@@ -1691,9 +1769,9 @@
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'black';
                 ctx.font = '52px Tangerine';
-                measure = ctx.measureText('Return to menu');
-                ctx.fillText('Return to menu', 975 - measure.width / 2, 780);
-                ctx.strokeText('Return to menu', 975 - measure.width / 2, 780);
+                measure = ctx.measureText('Guess the song!');
+                ctx.fillText('Guess the song!', 975 - measure.width / 2, 780);
+                ctx.strokeText('Guess the song!', 975 - measure.width / 2, 780);
             }
 
             function update() {
