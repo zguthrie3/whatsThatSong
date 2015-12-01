@@ -89,9 +89,8 @@
             79: 'upperDflat',
             76: 'upperD',
             80: 'upperEflat',
-            // THESE KEYS DO NOT WORK WITH SCORE ALGORITHM CORRECTLY. TO FIX
-            // 186: 'upperE',
-            // 222: 'upperF'
+            186: 'upperE',
+            222: 'upperF'
         };
         var recordRound = 0;
         var guess = '';
@@ -613,9 +612,10 @@
                             centerText(ctx, 'the next portion of the recording. The same', 475);
                             centerText(ctx, 'scoring rules apply here.', 600);
                         } else if (recordRound === 3) {
-                            centerText(ctx, 'Player 2, you now have 10 seconds to add one', 350);
-                            centerText(ctx, 'more portion to the recording. The same', 475);
-                            centerText(ctx, 'scoring rules apply here. Go for broke!', 600);
+                            centerText(ctx, 'Player 1, you now have 10 seconds to add one', 350);
+                            centerText(ctx, 'more portion to the song. Note that it will', 450);
+                            centerText(ctx, 'not be the same as the first or second parts. Sing the song', 550);
+                            centerText(ctx, 'in your head until you get a third part, and go for broke!', 650);
                         }
                     } else if (nextScreen === guessScreen) {
                         centerText(ctx, 'Guess Screen', 200);
@@ -1352,9 +1352,9 @@
             var wasButtonDown = false;
             var noteIterator = 0;
             var noteString = '';
+            var noteCount = 0;
             var transcription;
             var recordLength = 0;
-            
 
             function getTranscript(song) {
                 var transcript = null;
@@ -1380,12 +1380,20 @@
             function update() {
                 document.onkeydown = function (e) {
                     var soundId = sounds[e.keyCode];
-                    transcription = getTranscript(currentSong);
                     if (soundId) {
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
                         currentNote = sounds[e.keyCode];
                         noteString = noteString.concat(e.keyCode);
+                        noteCount++;
+                        if (e.keyCode === '186' || e.keyCode === '222') {
+                            topCount++;
+                        }
+                        if (topCount === 2) {
+                            topCount = 0;
+                            noteCount++;
+                        }
+
                         drawKeys(ctx);
                     }
                 }
@@ -1393,6 +1401,7 @@
                     currentNote = null;
                 }
                 if (recordLength === (500 || 1000 || 1500)) {
+                    transcription = getTranscript(currentSong);
                     endRecording();
                 }
             }
@@ -1400,44 +1409,89 @@
             function endRecording() {
                 var scriptSeg;
                 var recordSeg;
-                for (var i = 0; i < noteString.length / 2; i++) {
+                var scriptJump = false;
+                var recordJump = false;
+                var scriptShift = false;
+                var recordShift = false;
+                var j = 0;
+
+                for (var i = 0; i < noteCount; i++) {
                     if (transcription) {
                         if (2 * i + 1 < transcription.length) {
-                            var j = i;
-                            scriptSeg = transcription.substring(2 * i, 2 * i + 2);
-                            recordSeg = noteString.substring(2 * j, 2 * j + 2);
+                            if (recordJump) {
+                                recordJump = false;
+                                recordShift = false;
+                                j++;
+                            }
+                            if (scriptJump) {
+                                scriptSeg = transcription.substring(2 * i + 2, 2 * i + 4);
+                            } else if (scriptShift) {
+                                scriptSeg = transcription.substring(2 * i + 1, 2 * i + 3);
+                            } else {
+                                scriptSeg = transcription.substring(2 * i, 2 * i + 2);
+                            }
+
+                            if (recordShift) {
+                                recordSeg = noteString.substring(2 * j + 1, 2 * j + 3);
+                            } else {
+                                recordSeg = noteString.substring(2 * j, 2 * j + 2);
+                            }
+
                             if (scriptSeg === recordSeg) {
                                 players[currentPlayer - 1].score += 50;
+                                correctNotes++;
                             } else {
                                 players[currentPlayer - 1].score -= 50;
+                                incorrectNotes++;
                             }
-                            if (recordSeg === '18' && transcription.charAt(2 * j + 2) === '6') {
-                                j++;
+
+                            if (scriptJump) {
+                                scriptJump = false;
+                                scriptShift = false;
+                                continue;
                             }
-                            if (scriptSeg === '18' && transcription.charAt(2 * i + 2) === '6') {
-                                i++;
+
+                            if (scriptSeg === '18' || scriptSeg === '22') {
+                                if (scriptShift) {
+                                    scriptJump = true;
+                                } else {
+                                    alert('scriptShift occurred at i = ' + i + '. scriptSeg === ' + scriptSeg);
+                                    scriptShift = true;
+                                }
                             }
-                            if (transcription.charAt(2 * i) === '2') {
-                                i++;
-                            }
-                            if (noteString.charAt(2 * i) === '2') {
-                                j++;
+
+                            if (recordSeg === '18' || recordSeg === '22') {
+                                if (recordShift) {
+                                    
+                                    recordJump = true;
+                                } else {
+                                    alert('recordShift occurred at i = ' + i + '. recordSeg === ' + recordSeg);
+                                    recordShift = true;
+                                }
                             }
                         } else {
                             players[currentPlayer - 1].score -= 10;
+                            extraNotes++;
                         }
+                        j++;
                     }
                 }
                 if (recordRound === 3) {
                     recordLength = 0;
+                    recordCount = 0;
                     noteString = '';
+                    noteCount = 0;
+                    j = 0;
                     document.onkeydown = null;
                     document.onkeyup = null;
                     nextScreen = guessScreen;
                     startScreen = infoScreen;  
                 } else {
                     recordLength = 0;
+                    recordCount = 0;
                     noteString = '';
+                    noteCount = 0;
+                    j = 0;
                     recordRound++;
                     document.onkeydown = null;
                     document.onkeyup = null;
@@ -1453,6 +1507,8 @@
 
         improvScreen = (function (input) {
             var noteString = '';
+            var noteCount = 0;
+            var topCount = 0;
             var recordLength = 0;
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -1471,6 +1527,14 @@
                         sound.play();
                         currentNote = sounds[e.keyCode];
                         noteString = noteString.concat(e.keyCode);
+                        noteCount++;
+                        if (e.keyCode === '186' || e.keyCode === '222') {
+                            topCount++;
+                        }
+                        if (topCount === 2) {
+                            topCount = 0;
+                            noteCount++;
+                        }
                         drawKeys(ctx);
                     }
                 }
@@ -1485,8 +1549,13 @@
             function endRecording() {
                 var improvSeg;
                 var recordSeg;
+                var improvJump = false;
+                var recordJump = false;
+                var improvShift = false;
+                var recordShift = false;
                 if (improvRound === 1) {
                     recordLength = 0;
+                    noteCount = 0;
                     improvRecord = noteString;
                     noteString = '';
                     improvRound++;
@@ -1495,11 +1564,29 @@
                     startScreen = countdownScreen;
                 } else {
                     recordLength = 0;
-                    for (var i = 0; i < noteString.length / 2; i++) {
+                    var j = 0;
+                    for (var i = 0; i < noteCount; i++) {
                         if (2 * i + 1 < improvRecord.length) {
-                            var j = i;
-                            improvSeg = improvRecord.substring(2 * i, 2 * i + 2);
-                            recordSeg = noteString.substring(2 * j, 2 * j + 2);
+                            if (recordJump) {
+                                recordJump = false;
+                                recordShift = false;
+                                j++;
+                            }
+
+                            if (improvJump) {
+                                improvSeg = improvRecord.substring(2 * i + 2, 2 * i + 4);
+                            } else if (improvShift) {
+                                improvSeg = improvRecord.substring(2 * i + 1, 2 * i + 3);
+                            } else {
+                                improvSeg = improvRecord.substring(2 * i, 2 * i + 2);
+                            }
+
+                            if (recordShift) {
+                                recordSeg = noteString.substring(2 * j + 1, 2 * j + 3);
+                            } else {
+                                recordSeg = noteString.substring(2 * j, 2 * j + 2);
+                            }
+
                             if (improvSeg === recordSeg) {
                                 players[0].score += 50;
                                 correctNotes++;
@@ -1507,15 +1594,40 @@
                                 players[0].score -= 50;
                                 incorrectNotes++;
                             }
+
+                            if (improvJump) {
+                                improvJump = false;
+                                improvShift = false;
+                                continue;
+                            }
+
+                            if (improvSeg === '18' || improvSeg === '22') {
+                                if (improvShift) {
+                                    improvJump = true;
+                                } else {;
+                                    improvShift = true;
+                                }
+                            }
+
+                            if (recordSeg === '18' || recordSeg === '22') {
+                                if (recordShift) {
+                                    recordJump = true;
+                                } else {
+                                    recordShift = true;
+                                }
+                            }
                         } else {
                             players[0].score -= 10;
                             extraNotes++;
                         }
+                        j++;
                     }
                     document.onkeydown = null;
                     document.onkeyup = null;
                     improvRecord = null;
                     noteString = '';
+                    noteCount = 0;
+                    j = 0;
                     startScreen = improvResultsScreen;
                 }
             }
@@ -1589,6 +1701,9 @@
                     if (button !== null) {
                         canvas.removeEventListener('click', _func);
                         players[0].score = 0;
+                        correctNotes = 0;
+                        incorrectNotes = 0;
+                        extraNotes = 0;
                         startScreen = mainScreen;
                     }
                 }, false);
