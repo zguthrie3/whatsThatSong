@@ -1473,7 +1473,6 @@
                                 if (scriptShift) {
                                     scriptJump = true;
                                 } else {
-                                    alert('scriptShift occurred at i = ' + i + '. scriptSeg === ' + scriptSeg);
                                     scriptShift = true;
                                 }
                             }
@@ -1483,7 +1482,6 @@
                                     
                                     recordJump = true;
                                 } else {
-                                    alert('recordShift occurred at i = ' + i + '. recordSeg === ' + recordSeg);
                                     recordShift = true;
                                 }
                             }
@@ -1559,8 +1557,8 @@
                 ctx.fillText('x -10 = -' + extraNotes * 10, ctx.canvas.width / 2 + 100, 500);
                 ctx.strokeText('x -10 = -' + extraNotes * 10, ctx.canvas.width / 2 + 100, 500);
 
-                ctx.fillText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + players[0].score, ctx.canvas.width / 2 + 100, 625);
-                ctx.strokeText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + players[0].score, ctx.canvas.width / 2 + 100, 625);
+                ctx.fillText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + (correctNotes * 50 - incorrectNotes * 50 - extraNotes * 10), ctx.canvas.width / 2 + 100, 625);
+                ctx.strokeText('' + correctNotes * 50 + ' - ' + incorrectNotes * 50 + ' - ' + extraNotes * 10 + ' = ' + (correctNotes * 50 - incorrectNotes * 50 - extraNotes * 10), ctx.canvas.width / 2 + 100, 625);
 
                 ctx.font = '84px Tangerine';
 
@@ -1575,9 +1573,9 @@
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'black';
                 ctx.font = '52px Tangerine';
-                measure = ctx.measureText('Return to menu');
-                ctx.fillText('Return to menu', 975 - measure.width / 2, 780);
-                ctx.strokeText('Return to menu', 975 - measure.width / 2, 780);
+                measure = ctx.measureText('Guess the song!');
+                ctx.fillText('Guess the song!', 975 - measure.width / 2, 780);
+                ctx.strokeText('Guess the song!', 975 - measure.width / 2, 780);
             }
 
             function update() {
