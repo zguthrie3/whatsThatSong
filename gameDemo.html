@@ -35,6 +35,7 @@
         var countdownScreen;
         var guessScreen;
         var creationScreen;
+        var playbackScreen;
         var recordResultsScreen;
         var nextScreen;
         var winnerScreen;
@@ -99,6 +100,8 @@
         var guess = '';
         var title = 'What\'s that song?';
         var improvRound = 0;
+        var firstRecord = [];
+        var secondRecord = [];
         var chosen = [];
         for (var i = 0; i < 18; i++) {
             chosen[i] = false;
@@ -1183,9 +1186,8 @@
                     next = false;
                     if (improvRound === 1 || improvRound === 2) {
                         startScreen = improvScreen;
-                    } else if (creationRound === 1) {
-                        nextScreen = creationScreen;
-                        startScreen = infoScreen;
+                    } else if (creationRound !== 0) {
+                        startScreen = creationScreen;
                     } else if (recordRound === 0) {
                         startScreen = listenScreen;
                     } else {
@@ -1807,7 +1809,8 @@
         }(mouseClick));
 
         creationScreen = (function (input) {
-            var noteString = '';
+            var isKeyDown = false;
+            var noteArray = [];
             var recordLength = 0;
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -1822,20 +1825,42 @@
                 document.onkeydown = function (e) {
                     var soundId = sounds[e.keyCode];
                     if (soundId) {
+                        isKeyDown = true;
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
                         currentNote = sounds[e.keyCode];
-                        noteString = noteString.concat(e.keyCode);
+                        noteArray[recordLength] = e.keyCode;
                         drawKeys(ctx);
                     }
                 }
                 document.onkeyup = function (e) {
+                    isKeyUp = false;
                     currentNote = null;
                 }
+                noteArray[recordLength] = null;
                 if (recordLength === (500 || 1000)) {
                     endRecording();
                 }
             }
+
+            function endRecording() {
+                if (creationRound === 1) {
+                    firstRecord = noteArray;
+                    creationRound++;
+                    recordLength = 0;
+                    document.onkeydown = null;
+                    document.onkeyup = null;
+                    startScreen = countdownScreen;
+                } else {
+                    secondRecord = noteArray;
+                    creationRound = 0;
+                    recordLength = 0;
+                    document.onkeydown = null;
+                    document.onkeyup = null;
+                    startScreen = playbackScreen;
+                }
+            }
+
             return {
                 draw: draw,
                 update: update
@@ -1843,6 +1868,20 @@
         }(mouseClick));
 
 
+        playbackScreen = (function (input) {
+            function draw(canvas, ctx) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            }
+
+            function update() {
+
+            }
+
+            return {
+                draw: draw,
+                update: update
+            }
+        }(mouseClick));
         winnerScreen = (function (input) {
             var first, second, third;
             var init = true;
@@ -2000,6 +2039,7 @@
                         for (i = 0; i < chosen.length; i++) {
                             chosen[i] = false;
                         }
+                        init = true;
                         startScreen = mainScreen;
                     }
                 }, false);
@@ -2009,7 +2049,9 @@
                 update: update
             };
         }(mouseClick));
+        
         beginLoop();
+
     </script>
 </body>
 </html>
