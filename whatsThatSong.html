@@ -19,6 +19,12 @@
 <body>
     <canvas id="board"></canvas>
     <script>
+        /* What's That Song? An interactive guessing game made for Professor Loukissas's LMC 2700 Class
+         * Team 5
+         * Christine St. Jean (concept builder), Corey Salmon (affect architect), Zach Guthrie (craft engineer)
+         * Commented out are our create your own features, which we could not fully implement due to technical limitations of replaying recorded notes.
+         */
+
         var canvas;
         var surface;
         var startScreen;
@@ -34,8 +40,8 @@
         var listenScreen;
         var countdownScreen;
         var guessScreen;
-        var creationScreen;
-        var playbackScreen;
+        // var creationScreen;
+        // var playbackScreen;
         var recordResultsScreen;
         var nextScreen;
         var winnerScreen;
@@ -102,8 +108,8 @@
         var guess = '';
         var title = 'What\'s that song?';
         var improvRound = 0;
-        var firstRecording = '';
-        var secondRecording = '';
+        // var firstRecording = '';
+        // var secondRecording = '';
         var chosen = [];
         for (var i = 0; i < 18; i++) {
             chosen[i] = false;
@@ -595,8 +601,8 @@
                         centerText(ctx, 'to create your own improvisational song. After another countdown,', 450);
                         centerText(ctx, 'Player 2 will have 10 seconds to replicate Player 1\'s song.', 550);
                         centerText(ctx, 'Results will be shown immediately after player 2\'s attempt.', 650);
-                    } else if (nextScreen === creationScreen) {
-                        centerText(ctx, 'WORK IN PROGRESS', 200);
+                    //} else if (nextScreen === creationScreen) {
+                    //    centerText(ctx, 'WORK IN PROGRESS', 200);
                     } else if (nextScreen === countdownScreen) {
                         centerText(ctx, 'How to Play', 200);
 
@@ -663,8 +669,8 @@
         mainScreen = (function (input) {
             var buttons = [{x: 200, y: 550, w: 200, h: 150},
                 {x: 500, y: 550, w: 200, h: 150},
-                {x: 800, y: 550, w: 200, h: 150},
-                {x: 200, y: 775, w: 800, h: 100}];
+                {x: 800, y: 550, w: 200, h: 150}];
+                //{x: 200, y: 775, w: 800, h: 100}];
 
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -696,9 +702,9 @@
                 ctx.fillText('Improv Game', 900 - measurement.width / 2, 625);
                 ctx.strokeText('Improv Game', 900 - measurement.width / 2, 625);
 
-                ctx.font = '96px Tangerine';
-                measurement = ctx.measureText('Create your own song');
-                centerText(ctx, 'Create your own song', 845);
+                //ctx.font = '96px Tangerine';
+                //measurement = ctx.measureText('Create your own song');
+                //centerText(ctx, 'Create your own song', 845);
             }
 
             function update() {
@@ -711,7 +717,7 @@
                     } else if (button == buttons[1]) {
                         canvas.removeEventListener('click', _func);
                         improvRound = 0;
-                        creationRound = 0;
+                        //creationRound = 0;
                         startScreen = settingScreen;
                     } else if (button == buttons[2]) {
                         canvas.removeEventListener('click', _func);
@@ -719,11 +725,11 @@
                         improvRecord = "";
                         nextScreen = countdownScreen;
                         startScreen = infoScreen;
-                    } else if (button == buttons[3]) {
-                        canvas.removeEventListener('click', _func);
-                        creationRound = 1;
-                        creationRecord = "";
-                        startScreen = countdownScreen;
+                    //} else if (button == buttons[3]) {
+                    //    canvas.removeEventListener('click', _func);
+                    //    creationRound = 1;
+                    //    creationRecord = "";
+                    //    startScreen = countdownScreen;
                     }
                 }, false);
             }
@@ -1168,8 +1174,8 @@
                         centerText(ctx, 'Improv!', 600);
                     } else if (improvRound === 2) {
                         centerText(ctx, 'Replicate!', 600);
-                    } else if (creationRound === 1 || 2) {
-                        centerText(ctx, 'Create!', 600);
+                    //} else if (creationRound === 1 || 2) {
+                    //    centerText(ctx, 'Create!', 600);
                     } else if (recordRound === 0) {
                         centerText(ctx, 'Listen!', 600);
                     } else {
@@ -1188,8 +1194,8 @@
                     next = false;
                     if (improvRound === 1 || improvRound === 2) {
                         startScreen = improvScreen;
-                    } else if (creationRound !== 0) {
-                        startScreen = creationScreen;
+                    // } else if (creationRound !== 0) {
+                    //     startScreen = creationScreen;
                     } else if (recordRound === 0) {
                         startScreen = listenScreen;
                     } else {
@@ -1811,7 +1817,7 @@
             };
         }(mouseClick));
 
-        creationScreen = (function (input) {
+        /*creationScreen = (function (input) {
             var recordLength = 0;
             var noteString = '';
             function draw(canvas, ctx) {
@@ -1990,6 +1996,7 @@
                 update: update
             }
         }(mouseClick));
+        */
         winnerScreen = (function (input) {
             var first, second, third;
             var init = true;
