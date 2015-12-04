@@ -48,6 +48,8 @@
         var currentSong;
         var improvRecord;
         var songs = [];
+        var notes = [];
+        var timeFrames = [];
         var currentNote = null;
         var transcripts = {odeToJoy: ['6868707171706883', '65658368688383', '838368658368706865'],
             twinkleStar: ['65657171727271', '70706868838365', '71717070686883'],
@@ -1912,6 +1914,8 @@
                     } else if (button == buttons[1]) {
                         firstRecording = '';
                         secondRecording = '';
+                        notes = [];
+                        timeFrames = [];
                         canvas.removeEventListener('click', _func);
                         startScreen = mainScreen;
                     }
@@ -1919,8 +1923,6 @@
             }
 
             function parseRecordings() {
-                var notes = [];
-                var timeFrames = [];
                 var i = 0;
                 var j = 0;
                 var k = 0;
