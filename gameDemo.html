@@ -100,8 +100,8 @@
         var guess = '';
         var title = 'What\'s that song?';
         var improvRound = 0;
-        var firstRecord = [];
-        var secondRecord = [];
+        var firstRecording = '';
+        var secondRecording = '';
         var chosen = [];
         for (var i = 0; i < 18; i++) {
             chosen[i] = false;
@@ -1166,7 +1166,7 @@
                         centerText(ctx, 'Improv!', 600);
                     } else if (improvRound === 2) {
                         centerText(ctx, 'Replicate!', 600);
-                    } else if (creationRound === 1) {
+                    } else if (creationRound === 1 || 2) {
                         centerText(ctx, 'Create!', 600);
                     } else if (recordRound === 0) {
                         centerText(ctx, 'Listen!', 600);
@@ -1231,6 +1231,7 @@
                     var button = buttonCollision(buttons, e.offsetX, e.offsetY);
                     if (button == buttons[0]) {                      
                         var sound = new Audio(filePath);
+                        sound.volume = 0.2;
                         sound.play();
                     } else if (button == buttons[1]) {
                         recordRound = 1;
@@ -1784,9 +1785,9 @@
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'black';
                 ctx.font = '52px Tangerine';
-                measure = ctx.measureText('Guess the song!');
-                ctx.fillText('Guess the song!', 975 - measure.width / 2, 780);
-                ctx.strokeText('Guess the song!', 975 - measure.width / 2, 780);
+                measure = ctx.measureText('Return to menu');
+                ctx.fillText('Return to menu', 975 - measure.width / 2, 780);
+                ctx.strokeText('Return to menu', 975 - measure.width / 2, 780);
             }
 
             function update() {
@@ -1809,9 +1810,8 @@
         }(mouseClick));
 
         creationScreen = (function (input) {
-            var isKeyDown = false;
-            var noteArray = [];
             var recordLength = 0;
+            var noteString = '';
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.strokeStyle = 'black';
@@ -1825,19 +1825,19 @@
                 document.onkeydown = function (e) {
                     var soundId = sounds[e.keyCode];
                     if (soundId) {
-                        isKeyDown = true;
                         var sound = new Audio("./soundEffects/" + sounds[e.keyCode] + ".mp3");
                         sound.play();
+                        noteString = noteString.concat(e.keyCode);
+                        noteString = noteString.concat(recordLength);
+                        noteString = noteString.concat('_');
                         currentNote = sounds[e.keyCode];
-                        noteArray[recordLength] = e.keyCode;
                         drawKeys(ctx);
+                        
                     }
                 }
                 document.onkeyup = function (e) {
-                    isKeyUp = false;
                     currentNote = null;
                 }
-                noteArray[recordLength] = null;
                 if (recordLength === (500 || 1000)) {
                     endRecording();
                 }
@@ -1845,16 +1845,18 @@
 
             function endRecording() {
                 if (creationRound === 1) {
-                    firstRecord = noteArray;
                     creationRound++;
                     recordLength = 0;
+                    firstRecording = noteString;
+                    noteString = '';
                     document.onkeydown = null;
                     document.onkeyup = null;
                     startScreen = countdownScreen;
                 } else {
-                    secondRecord = noteArray;
                     creationRound = 0;
                     recordLength = 0;
+                    secondRecording = noteString;
+                    noteString = '';
                     document.onkeydown = null;
                     document.onkeyup = null;
                     startScreen = playbackScreen;
@@ -1869,12 +1871,116 @@
 
 
         playbackScreen = (function (input) {
+            var buttons = [{x: 450, y: 500, w: 300, h: 150}, {x: 850, y: 725, w: 250, h: 100}];
+            var keyCode;
+            var timeOnPage = 0;
+
             function draw(canvas, ctx) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = 'black';
+                ctx.strokeStyle = 'black';
+                for (var i = 0; i < buttons.length; i++) {
+                    ctx.fillRect(buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h);
+                }
+
+                ctx.fillStyle = '#78ff87';
+                ctx.font = '164px Tangerine';
+                centerText(ctx, 'Listen to your recording!', 150);
+
+                ctx.font = '86px Tangerine';
+                centerText(ctx, 'Press the button below to listen', 300);
+
+                ctx.fillStyle = 'white';
+                var measure = ctx.measureText('PLAY');
+                ctx.fillText('PLAY', 600 - measure.width / 2 - 10, 595);
+                ctx.strokeText('PLAY', 600 - measure.width / 2 - 10, 595);
+
+                ctx.font = '52px Tangerine';
+                measure = ctx.measureText('Return to menu');
+                ctx.fillText('Return to menu', 975 - measure.width / 2, 780);
+                ctx.strokeText('Return to menu', 975 - measure.width / 2, 780);
+
+                timeOnPage++;
             }
 
             function update() {
+                canvas.addEventListener('click', function _func(e) {
+                    var button = buttonCollision(buttons, e.offsetX, e.offsetY);
+                    if (button == buttons[0]) {
+                        parseRecordings();
+                        playLoop();
+                    } else if (button == buttons[1]) {
+                        firstRecording = '';
+                        secondRecording = '';
+                        canvas.removeEventListener('click', _func);
+                        startScreen = mainScreen;
+                    }
+                }, false);
+            }
 
+            function parseRecordings() {
+                var notes = [];
+                var timeFrames = [];
+                var i = 0;
+                var j = 0;
+                var k = 0;
+                while (i < firstRecording.length) {
+                    notes[k] = firstRecording.substring(i, i + 2);
+                    j = 2 * i + 2;
+                    while (j < firstRecording.length) {
+                        if (firstRecording.charAt(j) == '_') {
+                            break;
+                        }
+                        j++;
+                    }
+                    if (notes[k] === '18' || notes[k] === '22') {
+                        timeFrames[k] = firstRecording.substring(i + 3, j);
+                    } else {
+                        timeFrames[k] = firstRecording.substring(i + 2, j);
+                    }
+                    i = j + 1;
+                    k++;
+                }
+
+                i = 0;
+                j = 0;
+
+                while (i < secondRecording.length) {
+                    notes[k] = secondRecording.substring(i, i + 2);
+                    notes[k] = notes[k];
+                    j = 2 * i + 2;
+                    while (j < secondRecording.length) {
+                        if (secondRecording.charAt(j) == '_') {
+                            break;
+                        }
+                        j++;
+                    }
+                    if (notes[k] === '18' || notes[k] === '22') {
+                        timeFrames[k] = Number(secondRecording.substring(i + 3, j)) * 10;
+                    } else {
+                        timeFrames[k] = Number(secondRecording.substring(i + 2, j)) * 10;
+                    }
+                    i = j + 1;
+                    k++;
+                }
+            }
+
+            function playLoop() {
+                var i = 0;
+                var k = 0;
+                setTimeout(function() {
+                    if (k < timeFrames.length) { 
+                        if (timeFrames[k] == i) {
+                            var sound = new Audio("./soundEffects/" + sounds[notes[k]] + ".mp3");
+                            sound.play();
+                            k++;
+                        }
+                    }
+                    i += 10;
+                    if (i < 10000) {
+                        playLoop();
+                    }
+                }, 10)
             }
 
             return {
